@@ -61,12 +61,256 @@ jobs:
         path: csCMake
         ref: cs-main
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout cpptrace
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/cpptrace.git
+        path: cpptrace
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for cpptrace
+      run: cp csProjectManager/templates/cmakeUserPath-default.json cpptrace/cmakeUserPath.json
+
+    - name: checkout magic_enum
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/magic_enum.git
+        path: magic_enum
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for magic_enum
+      run: cp csProjectManager/templates/cmakeUserPath-default.json magic_enum/cmakeUserPath.json
+
+    - name: checkout libassert
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/libassert.git
+        path: libassert
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for libassert
+      run: cp csProjectManager/templates/cmakeUserPath-default.json libassert/cmakeUserPath.json
+
+    - name: checkout tclap
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tclap.git
+        path: tclap
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tclap
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tclap/cmakeUserPath.json
+
+    - name: checkout Catch2
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/Catch2.git
+        path: Catch2
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for Catch2
+      run: cp csProjectManager/templates/cmakeUserPath-default.json Catch2/cmakeUserPath.json
+
+    - name: checkout eigen3
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/eigen3.git
+        path: eigen3
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for eigen3
+      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
+
+    - name: checkout fmt
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt.git
+        path: fmt
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
+
+    - name: checkout fmt-eigen
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt-eigen.git
+        path: fmt-eigen
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt-eigen
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
+
+    - name: checkout pipes
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/pipes.git
+        path: pipes
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for pipes
+      run: cp csProjectManager/templates/cmakeUserPath-default.json pipes/cmakeUserPath.json
+
+    - name: checkout NamedType
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/NamedType.git
+        path: NamedType
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for NamedType
+      run: cp csProjectManager/templates/cmakeUserPath-default.json NamedType/cmakeUserPath.json
+
+    - name: checkout tl-optional
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-optional.git
+        path: tl-optional
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-optional
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-optional/cmakeUserPath.json
+
+    - name: checkout tl-expected
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-expected.git
+        path: tl-expected
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-expected
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-expected/cmakeUserPath.json
     # ---------------------------------------------------
 
     # ---------------------------------------------------
+    - name: Build linux-linux-ninja-eigen3 (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: eigen3
 
+    - name: Build linux-linux-ninja-fmt (1 / 2)
+      run: cmake --workflow linux-ninja-debug
+      working-directory: fmt
 
+    - name: Build linux-linux-ninja-fmt (2 / 2)
+      run: cmake --workflow linux-ninja-release
+      working-directory: fmt
 
+    - name: Build linux-linux-ninja-fmt-eigen (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: fmt-eigen
+
+    - name: Build linux-linux-ninja-cpptrace (1 / 2)
+      run: cmake --workflow linux-ninja-debug
+      working-directory: cpptrace
+
+    - name: Build linux-linux-ninja-cpptrace (2 / 2)
+      run: cmake --workflow linux-ninja-release
+      working-directory: cpptrace
+
+    - name: Build linux-linux-ninja-magic_enum (1 / 2)
+      run: cmake --workflow linux-ninja-debug
+      working-directory: magic_enum
+
+    - name: Build linux-linux-ninja-magic_enum (2 / 2)
+      run: cmake --workflow linux-ninja-release
+      working-directory: magic_enum
+
+    - name: Build linux-linux-ninja-libassert (1 / 2)
+      run: cmake --workflow linux-ninja-debug
+      working-directory: libassert
+
+    - name: Build linux-linux-ninja-libassert (2 / 2)
+      run: cmake --workflow linux-ninja-release
+      working-directory: libassert
+
+    - name: Build linux-linux-ninja-tclap (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: tclap
+
+    - name: Build linux-linux-ninja-Catch2 (1 / 2)
+      run: cmake --workflow linux-ninja-debug
+      working-directory: Catch2
+
+    - name: Build linux-linux-ninja-Catch2 (2 / 2)
+      run: cmake --workflow linux-ninja-release
+      working-directory: Catch2
+
+    - name: Build linux-linux-ninja-pipes (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: pipes
+
+    - name: Build linux-linux-ninja-NamedType (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: NamedType
+
+    - name: Build linux-linux-ninja-tl-optional (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: tl-optional
+
+    - name: Build linux-linux-ninja-tl-expected (1 / 1)
+      run: cmake --workflow linux-ninja-release
+      working-directory: tl-expected
+
+    - name: Build linux-linux-ninja-multi-config-clang-eigen3 (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: eigen3
+
+    - name: Build linux-linux-ninja-multi-config-clang-fmt (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: fmt
+
+    - name: Build linux-linux-ninja-multi-config-clang-fmt-eigen (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: fmt-eigen
+
+    - name: Build linux-linux-ninja-multi-config-clang-cpptrace (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: cpptrace
+
+    - name: Build linux-linux-ninja-multi-config-clang-magic_enum (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: magic_enum
+
+    - name: Build linux-linux-ninja-multi-config-clang-libassert (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: libassert
+
+    - name: Build linux-linux-ninja-multi-config-clang-tclap (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: tclap
+
+    - name: Build linux-linux-ninja-multi-config-clang-Catch2 (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: Catch2
+
+    - name: Build linux-linux-ninja-multi-config-clang-pipes (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: pipes
+
+    - name: Build linux-linux-ninja-multi-config-clang-NamedType (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: NamedType
+
+    - name: Build linux-linux-ninja-multi-config-clang-tl-optional (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: tl-optional
+
+    - name: Build linux-linux-ninja-multi-config-clang-tl-expected (1 / 1)
+      run: cmake --workflow linux-ninja-multi-config-clang
+      working-directory: tl-expected
     # ---------------------------------------------------
 
   # build-windows:

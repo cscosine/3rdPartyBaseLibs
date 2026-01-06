@@ -15,7 +15,34 @@ def checkout_func():
         needCMakeUserPathFile=False,
     )
 
-    _ = csGetRepository
+    csGetRepository(
+        repo_cs_url, "cscosine/cpptrace.git", "cpptrace", branch
+    )  # v0.8.2 + fixes
+    csGetRepository(
+        repo_cs_url, "cscosine/magic_enum.git", "magic_enum", branch
+    )  # v0.9.7 + fixes
+    csGetRepository(
+        repo_cs_url, "cscosine/libassert.git", "libassert", branch
+    )  # v2.15 + fixes
+
+    csGetRepository(repo_cs_url, "cscosine/tclap.git", "tclap", branch)  # v2.15 + fixes
+
+    csGetRepository(repo_cs_url, "cscosine/Catch2.git", "Catch2", branch)
+    csGetRepository(repo_cs_url, "cscosine/eigen3.git", "eigen3", branch)
+
+    # fmt fork
+    csGetRepository(repo_cs_url, "cscosine/fmt.git", "fmt", branch)
+    # fmt-eigen fork
+    csGetRepository(repo_cs_url, "cscosine/fmt-eigen.git", "fmt-eigen", branch)
+
+    # joboccara forks
+    csGetRepository(repo_cs_url, "cscosine/pipes.git", "pipes", branch)
+    csGetRepository(repo_cs_url, "cscosine/NamedType.git", "NamedType", branch)
+
+    # TartanLlama forks
+    csGetRepository(repo_cs_url, "cscosine/tl-optional.git", "tl-optional", branch)
+    csGetRepository(repo_cs_url, "cscosine/tl-expected.git", "tl-expected", branch)
+
     pass
 
 
@@ -44,11 +71,34 @@ def build_func():
         "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
     }
 
-    _ = presetRelease
-    _ = presetDebugRelease
-    _ = presetsAll
+    # eigen
+    csWorkflow("eigen3", presetRelease)
 
-    _ = csWorkflow
+    # fmt has a lib, build in debug and release
+    csWorkflow("fmt", presetDebugRelease)
+
+    # fmt-eigen is interface only, but needs fmt and needs to be compiled with all presets
+    csWorkflow("fmt-eigen", presetRelease)
+
+    # all base libraries gets compiled in debug and release
+    csWorkflow("cpptrace", presetDebugRelease)
+    csWorkflow("magic_enum", presetDebugRelease)
+    csWorkflow("libassert", presetDebugRelease)
+
+    # tclap is interface only
+    csWorkflow("tclap", presetRelease)
+
+    csWorkflow("Catch2", presetDebugRelease)
+
+    # pipes and NamedType are inteface only, but they need Catch2
+    csWorkflow("pipes", presetRelease)
+    csWorkflow("NamedType", presetRelease)
+
+    # optional and expected are inteface only, but they need Catch2
+    csWorkflow("tl-optional", presetRelease)
+    csWorkflow("tl-expected", presetRelease)
+
+    _ = presetsAll  # unused
 
 
 ############################################################################################
