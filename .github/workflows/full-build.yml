@@ -1,0 +1,81 @@
+## Auto-generated code, please to not edit!
+
+name: Full Build
+
+on:
+  push:
+    branches: [ "cs-main" ]
+  pull_request:
+    branches: [ "cs-main" ]
+  workflow_dispatch:   # manual trigger
+  # TODO(sc) add other repo triggering
+  #repository_dispatch: # ✅ trigger from other repos
+    # types: [external-change]
+
+jobs:
+  check-clang:
+    name: Check Clang and System Info
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Show OS and compiler info
+        run: |
+          echo "=== OS Information ==="
+          cat /etc/os-release || true
+          echo ""
+          echo "=== Clang Version ==="
+          clang++ --version || echo "clang++ not found"
+          echo ""
+          echo "=== GCC Version (if installed) ==="
+          gcc --version || echo "gcc not found"
+          echo ""
+          echo "=== CMake Version (if installed) ==="
+          cmake --version || echo "cmake not found"
+          echo ""
+          echo "=== Ninja Version (if installed) ==="
+          ninja --version || echo "ninja not found"
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+    # checkout myself
+    - name: checkout
+      uses: actions/checkout@v4
+
+    - name: Install Qt6 and glslang
+      run: sudo apt install -y libomp-dev qt6-base-dev libqt6serialport6-dev qt6-tools-dev qt6-tools-dev-tools glslang-tools
+
+    # ---------------------------------------------------
+    - name: checkout csProjectManager
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csProjectManager.git
+        path: csProjectManager
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout csCMake
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csCMake.git
+        path: csCMake
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+
+
+
+    # ---------------------------------------------------
+
+  # build-windows:
+  #   runs-on: windows-latest
+  #   steps:
+  #   # checkout myself
+  #   - name: checkout
+  #     uses: actions/checkout@v4
+  # TODO(sceriani) add the CHECKOUT_SECTION and the BUILD_SECTION_WINDOWS
+
+#    - name: Start tmate session
+#      uses: mxschmitt/action-tmate@v3
