@@ -2,10 +2,12 @@
 
 
 def checkout_func():
-    from csProjectManager.projectManager import csGetRepository
+    from csProjectManager.projectManager import csGetRepository, csWorkflowRunCommand
 
     repo_cs_url = "git@github.com"
     branch = "cs-main"
+
+    _ = csWorkflowRunCommand
 
     csGetRepository(
         repo_cs_url,

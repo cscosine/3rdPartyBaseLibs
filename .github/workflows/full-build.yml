@@ -42,10 +42,13 @@ jobs:
     - name: checkout
       uses: actions/checkout@v4
 
-    - name: Install Qt6 and glslang
-      run: sudo apt install -y libomp-dev qt6-base-dev libqt6serialport6-dev qt6-tools-dev qt6-tools-dev-tools glslang-tools
+    # ---------------------------------------------------
+    # additional setup commands
 
     # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # checkout section
     - name: checkout csProjectManager
       uses: actions/checkout@v4
       with:
@@ -196,6 +199,7 @@ jobs:
     # ---------------------------------------------------
 
     # ---------------------------------------------------
+    # build section
     - name: Build linux-linux-ninja-eigen3 (1 / 1)
       run: cmake --workflow linux-ninja-release
       working-directory: eigen3
