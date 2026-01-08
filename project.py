@@ -121,16 +121,6 @@ def main():
         )
         os.chdir(script_dir)
 
-    # Check if GitPython is installed
-    try:
-        from git import Repo, GitCommandError
-    except ImportError:
-        print(
-            "GitPython is not installed. Please install it using, for example, pip install GitPython --user",
-            file=sys.stderr,
-        )
-        sys.exit(1)
-
     # get the repository to setup the project,
     csProjectManager_dir = "csProjectManager"
     csProjectManager_base_url = "git@github.com"
@@ -156,9 +146,14 @@ def main():
     # Add csProjectManager directory to sys.path to allow module imports
     sys.path.insert(0, os.path.abspath(csProjectManager_dir))
     try:
-        from csProjectManager.projectManager import csSetupProject, RepoCheckoutCommands
-
         print("Successfully imported csProjectManager module.")
+
+        from csProjectManager.projectManager import csSetupProject, RepoCheckoutCommands
+        from csProjectManager.lib.preCommitHooks import is_pre_commit_installed
+
+        # check if precommit is available, will fail with error message in case
+        is_pre_commit_installed()
+
         csSetupProject(
             csProjectManager=RepoCheckoutCommands(
                 directory=csProjectManager_dir,
@@ -174,6 +169,18 @@ def main():
         print(f"Failed to import csProjectManager: {e}", file=sys.stderr)
         sys.exit(1)
 
+
+# Check if GitPython is installed
+try:
+    from git import Repo, GitCommandError
+except ImportError:
+    import sys
+
+    print(
+        "GitPython is not installed. Please install it using, for example, pip install GitPython",
+        file=sys.stderr,
+    )
+    sys.exit(1)
 
 if __name__ == "__main__":
     main()
