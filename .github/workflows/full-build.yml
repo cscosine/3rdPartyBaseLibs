@@ -26,8 +26,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  check-clang:
-    name: Check Clang and System Info
+  general-build-info:
+    name: Check Clang and System Info and Detect Trigger
     runs-on: ubuntu-latest
 
     steps:
@@ -47,6 +47,37 @@ jobs:
           echo ""
           echo "=== Ninja Version (if installed) ==="
           ninja --version || echo "ninja not found"
+
+      - name: Detect trigger
+        id: trigger
+        run: |
+          echo "event_name=${{ github.event_name }}" >> $GITHUB_OUTPUT
+
+          if [[ "${{ github.event_name }}" == "repository_dispatch" ]]; then
+            echo "trigger=dependent-repo" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "schedule" ]]; then
+            echo "trigger=scheduled" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "workflow_dispatch" ]]; then
+            echo "trigger=manual" >> $GITHUB_OUTPUT
+          elif [[ "${{ github.event_name }}" == "pull_request" ]]; then
+            echo "trigger=pull-request" >> $GITHUB_OUTPUT
+          else
+            echo "trigger=push" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Print trigger info
+        run: |
+          echo "Event name : ${{ github.event_name }}"
+          echo "Trigger    : ${{ steps.trigger.outputs.trigger }}"
+          echo "Ref        : ${{ github.ref }}"
+          echo "SHA        : ${{ github.sha }}"
+
+      # 🔍 Optional: inspect repository_dispatch payload
+      - name: Print repository dispatch payload
+        if: github.event_name == 'repository_dispatch'
+        run: |
+          echo "Source repo : ${{ github.event.client_payload.source_repo }}"
+          echo "Commit      : ${{ github.event.client_payload.commit }}"
 
   build-linux:
     runs-on: ubuntu-latest
