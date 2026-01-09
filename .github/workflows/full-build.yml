@@ -3,14 +3,27 @@
 name: Full Build
 
 on:
+  # 1️⃣ Run on push / PR to main branch
   push:
     branches: [ "cs-main" ]
   pull_request:
     branches: [ "cs-main" ]
+
+  # 2️⃣ Manual trigger
   workflow_dispatch:   # manual trigger
-  # TODO(sc) add other repo triggering
-  #repository_dispatch: # ✅ trigger from other repos
-    # types: [external-change]
+
+  # 3️⃣ Scheduled (weekly)
+  schedule:
+    - cron: "0 3 * * 1"   # Every Monday at 03:00 UTC
+
+  # 4️⃣ Triggered by other repositories
+  repository_dispatch:
+    types: [ dependent-repo-change ]
+
+# 🔒 Prevent duplicate / overlapping runs
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check-clang:

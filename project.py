@@ -161,6 +161,7 @@ def main():
                 repo=csProjectManager_repo,
                 branch=csProjectManager_branch,
                 needCMakeUserPathFile=False,
+                generateDependentRepoAction=True,
             ),
             checkout_func=checkout_func,
             build_func=build_func,

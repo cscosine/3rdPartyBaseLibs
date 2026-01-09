@@ -12,11 +12,19 @@ repos:
         entry: ./csProjectManager/hooks/meta-project/check-generated-meta-project.sh
         language: system
         pass_filenames: false
+        always_run: true
       - id: check-generated-workflow-yml
         name: Check generated YAML Workflow consistency
         entry: ./csProjectManager/hooks/meta-project/check-generated-workflow-yml.sh
         language: system
         pass_filenames: false
+        always_run: true
+      - id: check-no-unstaged
+        name: "Check for unstaged files"
+        entry: bash -c 'git diff --exit-code || { echo "You have unstaged changes. Stage or stash them before committing."; exit 1; }'
+        language: system
+        pass_filenames: false
+        always_run: true
 
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
