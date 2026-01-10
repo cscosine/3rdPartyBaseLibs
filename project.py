@@ -2,12 +2,17 @@
 
 
 def checkout_func():
-    from csProjectManager.projectManager import csGetRepository, csWorkflowRunCommand
+    from csProjectManager.projectManager import csGetRepository, csRunCommand
 
     repo_cs_url = "git@github.com"
     branch = "cs-main"
 
-    _ = csWorkflowRunCommand
+    _ = csRunCommand
+
+    csRunCommand(
+        name="Install prerequisites for Linux",
+        command="./installRequirements-linux.sh",
+    )
 
     csGetRepository(
         repo_cs_url,

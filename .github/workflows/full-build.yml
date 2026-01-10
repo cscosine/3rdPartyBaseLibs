@@ -96,6 +96,9 @@ jobs:
         ref: cs-main
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
+    - name: Install prerequisites for Linux
+      run: ./installRequirements-linux.sh
+
     - name: checkout csCMake
       uses: actions/checkout@v4
       with:
