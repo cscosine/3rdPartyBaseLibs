@@ -9,14 +9,14 @@ repos:
     hooks:
       - id: check-generated-meta-project
         name: Check generated project consistency
-        entry: ./csProjectManager/hooks/meta-project/check-generated-meta-project.sh
-        language: system
+        entry: ./csProjectManager/hooks/meta-project/check-generated-meta-project.py
+        language: python
         pass_filenames: false
         always_run: true
       - id: check-generated-workflow-yml
         name: Check generated YAML Workflow consistency
-        entry: ./csProjectManager/hooks/meta-project/check-generated-workflow-yml.sh
-        language: system
+        entry: ./csProjectManager/hooks/meta-project/check-generated-workflow-yml.py
+        language: python
         pass_filenames: false
         always_run: true
       - id: check-no-unstaged

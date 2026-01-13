@@ -97,7 +97,7 @@ jobs:
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
     - name: Install prerequisites for Linux
-      run: ./installRequirements-linux.sh
+      run: ./installRequirements-linux.sh on linux
 
     - name: checkout csCMake
       uses: actions/checkout@v4

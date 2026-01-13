@@ -12,6 +12,7 @@ def checkout_func():
     csRunCommand(
         name="Install prerequisites for Linux",
         command="./installRequirements-linux.sh",
+        os_name="linux",
     )
 
     csGetRepository(
@@ -115,6 +116,9 @@ def build_func():
 def main():
     import os
     import sys
+
+    sys.stdout.reconfigure(encoding="utf-8")
+    sys.stderr.reconfigure(encoding="utf-8")
 
     # Ensure script runs from its own directory
     script_dir = os.path.dirname(os.path.abspath(__file__))
