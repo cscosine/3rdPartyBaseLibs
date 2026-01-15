@@ -174,6 +174,7 @@ def main():
             ),
             checkout_func=checkout_func,
             build_func=build_func,
+            original_exec_dir=current_dir,
         )
     except ImportError as e:
         print(f"Failed to import csProjectManager: {e}", file=sys.stderr)
