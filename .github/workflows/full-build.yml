@@ -3,9 +3,11 @@
 name: Full Build
 
 on:
-  # 1️⃣ Run on push / PR to main branch
+  # 1️⃣ Run on push / PR to main branch or tag v*.*.*, the latter will trigger release
   push:
     branches: [ "cs-main" ]
+    tags:
+      - 'v*.*.*'
   pull_request:
     branches: [ "cs-main" ]
 
@@ -19,6 +21,9 @@ on:
   # 4️⃣ Triggered by other repositories
   repository_dispatch:
     types: [ dependent-repo-change ]
+
+permissions:
+  contents: write
 
 # 🔒 Prevent duplicate / overlapping runs
 concurrency:
@@ -112,6 +117,39 @@ jobs:
         ref: cs-main
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
+    - name: checkout eigen3
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/eigen3.git
+        path: eigen3
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for eigen3
+      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
+
+    - name: checkout fmt
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt.git
+        path: fmt
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
+
+    - name: checkout fmt-eigen
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt-eigen.git
+        path: fmt-eigen
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt-eigen
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
+
     - name: checkout cpptrace
       uses: actions/checkout@v4
       with:
@@ -166,39 +204,6 @@ jobs:
 
     - name: copy cmakeUserPath for Catch2
       run: cp csProjectManager/templates/cmakeUserPath-default.json Catch2/cmakeUserPath.json
-
-    - name: checkout eigen3
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/eigen3.git
-        path: eigen3
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for eigen3
-      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
-
-    - name: checkout fmt
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/fmt.git
-        path: fmt
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for fmt
-      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
-
-    - name: checkout fmt-eigen
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/fmt-eigen.git
-        path: fmt-eigen
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for fmt-eigen
-      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
 
     - name: checkout pipes
       uses: actions/checkout@v4
@@ -330,6 +335,56 @@ jobs:
       working-directory: tl-expected
     # ---------------------------------------------------
 
+    # ---------------------------------------------------
+    # zip installation section
+    - name: Zip Installations linux-linux-ninja
+      run: |
+        if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+          VERSION=${GITHUB_REF_NAME}
+        else
+          VERSION=$(date +'%Y%m%d-%H%M%S')
+        fi
+
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Using VERSION=$VERSION"
+
+        zip -r eigen3-linux-linux-ninja-${VERSION}.zip install/linux-ninja/eigen3/
+        zip -r fmt-linux-linux-ninja-${VERSION}.zip install/linux-ninja/fmt/
+        zip -r fmt-eigen-linux-linux-ninja-${VERSION}.zip install/linux-ninja/fmt-eigen/
+        zip -r cpptrace-linux-linux-ninja-${VERSION}.zip install/linux-ninja/cpptrace/
+        zip -r magic_enum-linux-linux-ninja-${VERSION}.zip install/linux-ninja/magic_enum/
+        zip -r libassert-linux-linux-ninja-${VERSION}.zip install/linux-ninja/libassert/
+        zip -r tclap-linux-linux-ninja-${VERSION}.zip install/linux-ninja/tclap/
+        zip -r Catch2-linux-linux-ninja-${VERSION}.zip install/linux-ninja/Catch2/
+        zip -r pipes-linux-linux-ninja-${VERSION}.zip install/linux-ninja/pipes/
+        zip -r NamedType-linux-linux-ninja-${VERSION}.zip install/linux-ninja/NamedType/
+        zip -r tl-optional-linux-linux-ninja-${VERSION}.zip install/linux-ninja/tl-optional/
+        zip -r tl-expected-linux-linux-ninja-${VERSION}.zip install/linux-ninja/tl-expected/
+      shell: bash
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # prepare artifacts section
+    - name: Upload Installation Artifacts linux-linux-ninja
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-linux-ninja
+        if-no-files-found: error
+        path: |
+          eigen3-linux-linux-ninja-${{ env.VERSION }}.zip
+          fmt-linux-linux-ninja-${{ env.VERSION }}.zip
+          fmt-eigen-linux-linux-ninja-${{ env.VERSION }}.zip
+          cpptrace-linux-linux-ninja-${{ env.VERSION }}.zip
+          magic_enum-linux-linux-ninja-${{ env.VERSION }}.zip
+          libassert-linux-linux-ninja-${{ env.VERSION }}.zip
+          tclap-linux-linux-ninja-${{ env.VERSION }}.zip
+          Catch2-linux-linux-ninja-${{ env.VERSION }}.zip
+          pipes-linux-linux-ninja-${{ env.VERSION }}.zip
+          NamedType-linux-linux-ninja-${{ env.VERSION }}.zip
+          tl-optional-linux-linux-ninja-${{ env.VERSION }}.zip
+          tl-expected-linux-linux-ninja-${{ env.VERSION }}.zip
+    # ---------------------------------------------------
+
   build-linux-linux-ninja-multi-config-clang:
     runs-on: ubuntu-latest
     steps:
@@ -362,6 +417,39 @@ jobs:
         path: csCMake
         ref: cs-main
         token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout eigen3
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/eigen3.git
+        path: eigen3
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for eigen3
+      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
+
+    - name: checkout fmt
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt.git
+        path: fmt
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
+
+    - name: checkout fmt-eigen
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt-eigen.git
+        path: fmt-eigen
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt-eigen
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
 
     - name: checkout cpptrace
       uses: actions/checkout@v4
@@ -417,39 +505,6 @@ jobs:
 
     - name: copy cmakeUserPath for Catch2
       run: cp csProjectManager/templates/cmakeUserPath-default.json Catch2/cmakeUserPath.json
-
-    - name: checkout eigen3
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/eigen3.git
-        path: eigen3
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for eigen3
-      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
-
-    - name: checkout fmt
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/fmt.git
-        path: fmt
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for fmt
-      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
-
-    - name: checkout fmt-eigen
-      uses: actions/checkout@v4
-      with:
-        repository: cscosine/fmt-eigen.git
-        path: fmt-eigen
-        ref: cs-main
-        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-    - name: copy cmakeUserPath for fmt-eigen
-      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
 
     - name: checkout pipes
       uses: actions/checkout@v4
@@ -560,3 +615,84 @@ jobs:
       run: cmake --workflow linux-ninja-multi-config-clang
       working-directory: tl-expected
     # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # zip installation section
+    - name: Zip Installations linux-linux-ninja-multi-config-clang
+      run: |
+        if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+          VERSION=${GITHUB_REF_NAME}
+        else
+          VERSION=$(date +'%Y%m%d-%H%M%S')
+        fi
+
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+        echo "Using VERSION=$VERSION"
+
+        zip -r eigen3-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/eigen3/
+        zip -r fmt-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/fmt/
+        zip -r fmt-eigen-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/fmt-eigen/
+        zip -r cpptrace-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/cpptrace/
+        zip -r magic_enum-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/magic_enum/
+        zip -r libassert-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/libassert/
+        zip -r tclap-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/tclap/
+        zip -r Catch2-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/Catch2/
+        zip -r pipes-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/pipes/
+        zip -r NamedType-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/NamedType/
+        zip -r tl-optional-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/tl-optional/
+        zip -r tl-expected-linux-linux-ninja-multi-config-clang-${VERSION}.zip install/linux-ninja-multi-config-clang/tl-expected/
+      shell: bash
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # prepare artifacts section
+    - name: Upload Installation Artifacts linux-linux-ninja-multi-config-clang
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux-linux-ninja-multi-config-clang
+        if-no-files-found: error
+        path: |
+          eigen3-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          fmt-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          fmt-eigen-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          cpptrace-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          magic_enum-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          libassert-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          tclap-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          Catch2-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          pipes-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          NamedType-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          tl-optional-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+          tl-expected-linux-linux-ninja-multi-config-clang-${{ env.VERSION }}.zip
+    # ---------------------------------------------------
+
+  # ---------------------------------------------------
+  # create release section
+  create-release:
+    runs-on: ubuntu-latest
+    needs: [build-linux-linux-ninja, build-linux-linux-ninja-multi-config-clang]  # waits for all builds
+    if: ${{ github.ref_type == 'tag' }}   # only on tag
+    steps:
+      - name: Download artifacts linux-linux-ninja
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-linux-ninja
+          path: linux-linux-ninja
+
+      - name: Download artifacts linux-linux-ninja-multi-config-clang
+        uses: actions/download-artifact@v4
+        with:
+          name: linux-linux-ninja-multi-config-clang
+          path: linux-linux-ninja-multi-config-clang
+
+      - name: Create GitHub release and upload assets
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          files: |
+            linux-linux-ninja/*.zip
+            linux-linux-ninja-multi-config-clang/*.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # ---------------------------------------------------

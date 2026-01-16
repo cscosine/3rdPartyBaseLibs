@@ -23,6 +23,14 @@ def checkout_func():
         needCMakeUserPathFile=False,
     )
 
+    csGetRepository(repo_cs_url, "cscosine/eigen3.git", "eigen3", branch)
+
+    # fmt fork
+    csGetRepository(repo_cs_url, "cscosine/fmt.git", "fmt", branch)
+
+    # fmt-eigen fork
+    csGetRepository(repo_cs_url, "cscosine/fmt-eigen.git", "fmt-eigen", branch)
+
     csGetRepository(
         repo_cs_url, "cscosine/cpptrace.git", "cpptrace", branch
     )  # v0.8.2 + fixes
@@ -36,12 +44,6 @@ def checkout_func():
     csGetRepository(repo_cs_url, "cscosine/tclap.git", "tclap", branch)  # v2.15 + fixes
 
     csGetRepository(repo_cs_url, "cscosine/Catch2.git", "Catch2", branch)
-    csGetRepository(repo_cs_url, "cscosine/eigen3.git", "eigen3", branch)
-
-    # fmt fork
-    csGetRepository(repo_cs_url, "cscosine/fmt.git", "fmt", branch)
-    # fmt-eigen fork
-    csGetRepository(repo_cs_url, "cscosine/fmt-eigen.git", "fmt-eigen", branch)
 
     # joboccara forks
     csGetRepository(repo_cs_url, "cscosine/pipes.git", "pipes", branch)
