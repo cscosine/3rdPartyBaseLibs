@@ -246,6 +246,20 @@ jobs:
     # ---------------------------------------------------
 
     # ---------------------------------------------------
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: pip install -r csProjectManager/requirements.txt
+
+    - name: Run all pre-commit hooks
+      run: python3 project.py --install-hooks --run-hooks
+      working-directory: .
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
     # build section
     - name: Build linux-linux-ninja-eigen3 (1 / 1)
       run: cmake --workflow linux-ninja-release
@@ -480,6 +494,20 @@ jobs:
 
     - name: copy cmakeUserPath for tl-expected
       run: cp csProjectManager/templates/cmakeUserPath-default.json tl-expected/cmakeUserPath.json
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: pip install -r csProjectManager/requirements.txt
+
+    - name: Run all pre-commit hooks
+      run: python3 project.py --install-hooks --run-hooks
+      working-directory: .
     # ---------------------------------------------------
 
     # ---------------------------------------------------
