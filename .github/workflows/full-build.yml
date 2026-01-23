@@ -690,6 +690,7 @@ jobs:
         with:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
+          fail_on_unmatched_files: true
           files: |
             linux-linux-ninja/*.zip
             linux-linux-ninja-multi-config-clang/*.zip
