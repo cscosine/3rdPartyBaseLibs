@@ -28,7 +28,7 @@ permissions:
 # 🔒 Prevent duplicate / overlapping runs
 concurrency:
   group: ci-${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: false # keep it false, early exit mechanism + debounce will prevent multiple builds
 
 jobs:
   general-build-info:
@@ -84,13 +84,251 @@ jobs:
           echo "Source repo : ${{ github.event.client_payload.source_repo }}"
           echo "Commit      : ${{ github.event.client_payload.commit }}"
 
+  guard:
+    name: Early-Exit Guard
+    runs-on: ubuntu-latest
+
+    outputs:
+      should_build: ${{ steps.decision.outputs.should_build }}
+
+    steps:
+      # checkout myself
+      - name: checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # checkout other deps
+
+      - name: checkout csProjectManager
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/csProjectManager.git
+          path: csProjectManager
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout csCMake
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/csCMake.git
+          path: csCMake
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout eigen3
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/eigen3.git
+          path: eigen3
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout fmt
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/fmt.git
+          path: fmt
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout fmt-eigen
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/fmt-eigen.git
+          path: fmt-eigen
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout cpptrace
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/cpptrace.git
+          path: cpptrace
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout magic_enum
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/magic_enum.git
+          path: magic_enum
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout libassert
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/libassert.git
+          path: libassert
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout tclap
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/tclap.git
+          path: tclap
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout Catch2
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/Catch2.git
+          path: Catch2
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout pipes
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/pipes.git
+          path: pipes
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout NamedType
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/NamedType.git
+          path: NamedType
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout tl-optional
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/tl-optional.git
+          path: tl-optional
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: checkout tl-expected
+        uses: actions/checkout@v4
+        with:
+          repository: cscosine/tl-expected.git
+          path: tl-expected
+          ref: cs-main
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      # ---------------------------------------------------
+      # Compute current SHAs
+      - name: Compute current SHAs
+        id: shas
+        run: |
+          echo "3rdPartyBaseLibs=$(git rev-parse HEAD)" >> shas.txt
+          # all other deps...
+          echo "cscosine/csProjectManager.git=$(git -C csProjectManager rev-parse HEAD)" >> shas.txt
+          echo "cscosine/csCMake.git=$(git -C csCMake rev-parse HEAD)" >> shas.txt
+          echo "cscosine/eigen3.git=$(git -C eigen3 rev-parse HEAD)" >> shas.txt
+          echo "cscosine/fmt.git=$(git -C fmt rev-parse HEAD)" >> shas.txt
+          echo "cscosine/fmt-eigen.git=$(git -C fmt-eigen rev-parse HEAD)" >> shas.txt
+          echo "cscosine/cpptrace.git=$(git -C cpptrace rev-parse HEAD)" >> shas.txt
+          echo "cscosine/magic_enum.git=$(git -C magic_enum rev-parse HEAD)" >> shas.txt
+          echo "cscosine/libassert.git=$(git -C libassert rev-parse HEAD)" >> shas.txt
+          echo "cscosine/tclap.git=$(git -C tclap rev-parse HEAD)" >> shas.txt
+          echo "cscosine/Catch2.git=$(git -C Catch2 rev-parse HEAD)" >> shas.txt
+          echo "cscosine/pipes.git=$(git -C pipes rev-parse HEAD)" >> shas.txt
+          echo "cscosine/NamedType.git=$(git -C NamedType rev-parse HEAD)" >> shas.txt
+          echo "cscosine/tl-optional.git=$(git -C tl-optional rev-parse HEAD)" >> shas.txt
+          echo "cscosine/tl-expected.git=$(git -C tl-expected rev-parse HEAD)" >> shas.txt
+
+          cat shas.txt
+
+      # ---------------------------------------------------
+      # Restore previous SHAs from cache (cheap persistent store)
+      - name: Restore previous SHAs
+        id: cache
+        uses: actions/cache@v4
+        with:
+          path: shas-prev.txt
+          key: deps-sha-${{ github.ref_name }}
+          restore-keys: |
+            deps-sha-
+
+      # ---------------------------------------------------
+      # Decide whether to build
+      - name: Decide whether to build
+        id: decision
+        run: |
+          # Always build on tag
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "💡 Trigger is a tag, will build"
+            exit 0
+          fi
+
+          if [ ! -f shas-prev.txt ]; then
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "💡 No previous SHAs found → will build"
+            exit 0
+          fi
+
+          if cmp -s shas.txt shas-prev.txt; then
+            echo "should_build=false" >> $GITHUB_OUTPUT
+            echo "💤 SHAs unchanged → skipping build"
+          else
+            echo "should_build=true" >> $GITHUB_OUTPUT
+            echo "💡 SHAs changed → will build"
+          fi
+
+      # ---------------------------------------------------
+      # Save current SHAs for next run
+      - name: Prepare SHAs for cache
+        run: cp shas.txt shas-prev.txt
+
+      - name: Save current SHAs to cache
+        if: steps.decision.outputs.should_build == 'true'
+        uses: actions/cache@v4
+        with:
+          path: shas-prev.txt
+          key: deps-sha-${{ github.ref_name }}
+
+      # ---------------------------------------------------
+      # 🔹 Show nice summary in Actions UI
+      - name: Early-Exit Summary
+        run: |
+          echo "### 🔹 Early-Exit Guard Summary"
+          echo ""
+          echo "Trigger type : ${GITHUB_EVENT_NAME}"
+          echo "Ref          : ${GITHUB_REF}"
+          echo "Current SHAs :"
+          cat shas.txt
+          echo ""
+          if [ "${{ steps.decision.outputs.should_build }}" == "true" ]; then
+            echo "✅ Build will proceed"
+          else
+            echo "💤 Build skipped (early-exit)"
+          fi
+
   build-linux-linux-ninja:
+    needs: guard
+    if: needs.guard.outputs.should_build == 'true'
+
     runs-on: ubuntu-latest
     steps:
 
     ##### UNCOMMENT AND MOVE THESE LINES IF YOU NEED A TERMINAL TO INTERACT AND INSPECT THE JOB
     # - name: Start tmate session
     #   uses: mxschmitt/action-tmate@v3
+
+    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
+      run: sleep 60
 
     # checkout myself
     - name: checkout
@@ -422,12 +660,18 @@ jobs:
     # ---------------------------------------------------
 
   build-linux-linux-ninja-multi-config-clang:
+    needs: guard
+    if: needs.guard.outputs.should_build == 'true'
+
     runs-on: ubuntu-latest
     steps:
 
     ##### UNCOMMENT AND MOVE THESE LINES IF YOU NEED A TERMINAL TO INTERACT AND INSPECT THE JOB
     # - name: Start tmate session
     #   uses: mxschmitt/action-tmate@v3
+
+    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
+      run: sleep 60
 
     # checkout myself
     - name: checkout
