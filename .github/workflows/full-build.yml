@@ -31,8 +31,48 @@ concurrency:
   cancel-in-progress: false # keep it false, early exit mechanism + debounce will prevent multiple builds
 
 jobs:
-  general-build-info:
-    name: Check Clang and System Info and Detect Trigger
+  windows-build-info:
+    name: Check Clang and System Info Windows
+    runs-on: windows-latest
+    steps:
+      - name: Setup MSVC environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: x64
+
+      - name: Show OS and compiler info
+        shell: pwsh
+        run: |
+          Write-Host "=== OS Information ==="
+          systeminfo | Select-String "OS Name","OS Version"
+
+          Write-Host ""
+          Write-Host "=== Visual Studio Installation ==="
+          if (Get-Command vswhere -ErrorAction SilentlyContinue) {
+            vswhere -latest -products * `
+              -property installationPath
+          } else {
+            Write-Host "vswhere not found"
+          }
+
+          Write-Host ""
+          Write-Host "=== MSVC Compiler (cl.exe) ==="
+          if (Get-Command cl.exe -ErrorAction SilentlyContinue) {
+            cl
+          } else {
+            Write-Host "cl.exe not found"
+          }
+
+          Write-Host ""
+          Write-Host "=== Clang (clang-cl) ==="
+          if (Get-Command clang-cl -ErrorAction SilentlyContinue) {
+            clang-cl --version
+          } else {
+            Write-Host "clang-cl not found"
+          }
+
+  linux-build-info:
+    name: Check Clang and System Info Linux
     runs-on: ubuntu-latest
 
     steps:
@@ -53,6 +93,11 @@ jobs:
           echo "=== Ninja Version (if installed) ==="
           ninja --version || echo "ninja not found"
 
+  trigger-info:
+    name: Trigger info
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Detect trigger
         id: trigger
         run: |
@@ -982,11 +1027,811 @@ jobs:
           bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-linux-linux-ninja-multi-config-clang.zip
     # ---------------------------------------------------
 
+  build-windows-msvc2022-x64:
+    needs: guard
+    if: needs.guard.outputs.should_build == 'true'
+
+    runs-on: windows-latest
+    steps:
+
+    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
+      run: sleep 60
+
+    # checkout myself
+    - name: checkout
+      uses: actions/checkout@v4
+
+    # ---------------------------------------------------
+    # checkout and commands
+    - name: checkout csProjectManager
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csProjectManager.git
+        path: csProjectManager
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout csCMake
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csCMake.git
+        path: csCMake
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout eigen3
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/eigen3.git
+        path: eigen3
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for eigen3
+      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
+
+    - name: checkout fmt
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt.git
+        path: fmt
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
+
+    - name: checkout fmt-eigen
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt-eigen.git
+        path: fmt-eigen
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt-eigen
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
+
+    - name: checkout cpptrace
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/cpptrace.git
+        path: cpptrace
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for cpptrace
+      run: cp csProjectManager/templates/cmakeUserPath-default.json cpptrace/cmakeUserPath.json
+
+    - name: checkout magic_enum
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/magic_enum.git
+        path: magic_enum
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for magic_enum
+      run: cp csProjectManager/templates/cmakeUserPath-default.json magic_enum/cmakeUserPath.json
+
+    - name: checkout libassert
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/libassert.git
+        path: libassert
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for libassert
+      run: cp csProjectManager/templates/cmakeUserPath-default.json libassert/cmakeUserPath.json
+
+    - name: checkout tclap
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tclap.git
+        path: tclap
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tclap
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tclap/cmakeUserPath.json
+
+    - name: checkout Catch2
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/Catch2.git
+        path: Catch2
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for Catch2
+      run: cp csProjectManager/templates/cmakeUserPath-default.json Catch2/cmakeUserPath.json
+
+    - name: checkout pipes
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/pipes.git
+        path: pipes
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for pipes
+      run: cp csProjectManager/templates/cmakeUserPath-default.json pipes/cmakeUserPath.json
+
+    - name: checkout NamedType
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/NamedType.git
+        path: NamedType
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for NamedType
+      run: cp csProjectManager/templates/cmakeUserPath-default.json NamedType/cmakeUserPath.json
+
+    - name: checkout tl-optional
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-optional.git
+        path: tl-optional
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-optional
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-optional/cmakeUserPath.json
+
+    - name: checkout tl-expected
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-expected.git
+        path: tl-expected
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-expected
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-expected/cmakeUserPath.json
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: pip install -r csProjectManager/requirements.txt
+
+    - name: Run all pre-commit hooks
+      run: python3 project.py --install-hooks --run-hooks
+      working-directory: .
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # additional setup for windows
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    # note: keep setup cmake after msvc setup to have the correct cmake in path
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+
+    # ---------------------------------------------------
+    # ---------------------------------------------------
+    # build section
+    - name: Build windows-msvc2022-x64-eigen3 (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: eigen3
+
+    - name: Build windows-msvc2022-x64-fmt (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: fmt
+
+    - name: Build windows-msvc2022-x64-fmt-eigen (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: fmt-eigen
+
+    - name: Build windows-msvc2022-x64-cpptrace (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: cpptrace
+
+    - name: Build windows-msvc2022-x64-magic_enum (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: magic_enum
+
+    - name: Build windows-msvc2022-x64-libassert (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: libassert
+
+    - name: Build windows-msvc2022-x64-tclap (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: tclap
+
+    - name: Build windows-msvc2022-x64-Catch2 (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: Catch2
+
+    - name: Build windows-msvc2022-x64-pipes (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: pipes
+
+    - name: Build windows-msvc2022-x64-NamedType (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: NamedType
+
+    - name: Build windows-msvc2022-x64-tl-optional (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: tl-optional
+
+    - name: Build windows-msvc2022-x64-tl-expected (1 / 1)
+      run: cmake --workflow msvc2022-x64
+      working-directory: tl-expected
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # zip installation section
+    - name: Zip Installations windows-msvc2022-x64
+      shell: pwsh
+      run: |
+        if ($env:GITHUB_REF_TYPE -eq "tag") {
+          $VERSION = $env:GITHUB_REF_NAME
+        } else {
+          $VERSION = Get-Date -Format "yyyyMMdd-HHmmss"
+        }
+
+        "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Append
+        Write-Host "Using VERSION=$VERSION",
+
+        # zip eigen3
+        $src = "install\msvc2022-x64\eigen3"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip fmt
+        $src = "install\msvc2022-x64\fmt"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip fmt-eigen
+        $src = "install\msvc2022-x64\fmt-eigen"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip cpptrace
+        $src = "install\msvc2022-x64\cpptrace"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip magic_enum
+        $src = "install\msvc2022-x64\magic_enum"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip libassert
+        $src = "install\msvc2022-x64\libassert"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tclap
+        $src = "install\msvc2022-x64\tclap"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip Catch2
+        $src = "install\msvc2022-x64\Catch2"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip pipes
+        $src = "install\msvc2022-x64\pipes"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip NamedType
+        $src = "install\msvc2022-x64\NamedType"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tl-optional
+        $src = "install\msvc2022-x64\tl-optional"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tl-expected
+        $src = "install\msvc2022-x64\tl-expected"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # prepare artifacts section
+    - name: Upload Installation Artifacts windows-msvc2022-x64
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-msvc2022-x64
+        if-no-files-found: error
+        path: |
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-windows-msvc2022-x64.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-windows-msvc2022-x64.zip
+    # ---------------------------------------------------
+
+  build-windows-msvc2022-x64-LLVM:
+    needs: guard
+    if: needs.guard.outputs.should_build == 'true'
+
+    runs-on: windows-latest
+    steps:
+
+    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
+      run: sleep 60
+
+    # checkout myself
+    - name: checkout
+      uses: actions/checkout@v4
+
+    # ---------------------------------------------------
+    # checkout and commands
+    - name: checkout csProjectManager
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csProjectManager.git
+        path: csProjectManager
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout csCMake
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/csCMake.git
+        path: csCMake
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: checkout eigen3
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/eigen3.git
+        path: eigen3
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for eigen3
+      run: cp csProjectManager/templates/cmakeUserPath-default.json eigen3/cmakeUserPath.json
+
+    - name: checkout fmt
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt.git
+        path: fmt
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt/cmakeUserPath.json
+
+    - name: checkout fmt-eigen
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/fmt-eigen.git
+        path: fmt-eigen
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for fmt-eigen
+      run: cp csProjectManager/templates/cmakeUserPath-default.json fmt-eigen/cmakeUserPath.json
+
+    - name: checkout cpptrace
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/cpptrace.git
+        path: cpptrace
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for cpptrace
+      run: cp csProjectManager/templates/cmakeUserPath-default.json cpptrace/cmakeUserPath.json
+
+    - name: checkout magic_enum
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/magic_enum.git
+        path: magic_enum
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for magic_enum
+      run: cp csProjectManager/templates/cmakeUserPath-default.json magic_enum/cmakeUserPath.json
+
+    - name: checkout libassert
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/libassert.git
+        path: libassert
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for libassert
+      run: cp csProjectManager/templates/cmakeUserPath-default.json libassert/cmakeUserPath.json
+
+    - name: checkout tclap
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tclap.git
+        path: tclap
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tclap
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tclap/cmakeUserPath.json
+
+    - name: checkout Catch2
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/Catch2.git
+        path: Catch2
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for Catch2
+      run: cp csProjectManager/templates/cmakeUserPath-default.json Catch2/cmakeUserPath.json
+
+    - name: checkout pipes
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/pipes.git
+        path: pipes
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for pipes
+      run: cp csProjectManager/templates/cmakeUserPath-default.json pipes/cmakeUserPath.json
+
+    - name: checkout NamedType
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/NamedType.git
+        path: NamedType
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for NamedType
+      run: cp csProjectManager/templates/cmakeUserPath-default.json NamedType/cmakeUserPath.json
+
+    - name: checkout tl-optional
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-optional.git
+        path: tl-optional
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-optional
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-optional/cmakeUserPath.json
+
+    - name: checkout tl-expected
+      uses: actions/checkout@v4
+      with:
+        repository: cscosine/tl-expected.git
+        path: tl-expected
+        ref: cs-main
+        token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+    - name: copy cmakeUserPath for tl-expected
+      run: cp csProjectManager/templates/cmakeUserPath-default.json tl-expected/cmakeUserPath.json
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+
+    - name: Install Python dependencies
+      run: pip install -r csProjectManager/requirements.txt
+
+    - name: Run all pre-commit hooks
+      run: python3 project.py --install-hooks --run-hooks
+      working-directory: .
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # additional setup for windows
+    - name: Setup MSVC environment
+      uses: ilammy/msvc-dev-cmd@v1
+      with:
+        arch: x64
+
+    # note: keep setup cmake after msvc setup to have the correct cmake in path
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+
+    # ---------------------------------------------------
+    # ---------------------------------------------------
+    # build section
+    - name: Build windows-msvc2022-x64-LLVM-eigen3 (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: eigen3
+
+    - name: Build windows-msvc2022-x64-LLVM-fmt (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: fmt
+
+    - name: Build windows-msvc2022-x64-LLVM-fmt-eigen (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: fmt-eigen
+
+    - name: Build windows-msvc2022-x64-LLVM-cpptrace (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: cpptrace
+
+    - name: Build windows-msvc2022-x64-LLVM-magic_enum (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: magic_enum
+
+    - name: Build windows-msvc2022-x64-LLVM-libassert (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: libassert
+
+    - name: Build windows-msvc2022-x64-LLVM-tclap (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: tclap
+
+    - name: Build windows-msvc2022-x64-LLVM-Catch2 (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: Catch2
+
+    - name: Build windows-msvc2022-x64-LLVM-pipes (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: pipes
+
+    - name: Build windows-msvc2022-x64-LLVM-NamedType (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: NamedType
+
+    - name: Build windows-msvc2022-x64-LLVM-tl-optional (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: tl-optional
+
+    - name: Build windows-msvc2022-x64-LLVM-tl-expected (1 / 1)
+      run: cmake --workflow msvc2022-x64-LLVM
+      working-directory: tl-expected
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # zip installation section
+    - name: Zip Installations windows-msvc2022-x64-LLVM
+      shell: pwsh
+      run: |
+        if ($env:GITHUB_REF_TYPE -eq "tag") {
+          $VERSION = $env:GITHUB_REF_NAME
+        } else {
+          $VERSION = Get-Date -Format "yyyyMMdd-HHmmss"
+        }
+
+        "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Append
+        Write-Host "Using VERSION=$VERSION",
+
+        # zip eigen3
+        $src = "install\msvc2022-x64-LLVM\eigen3"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip fmt
+        $src = "install\msvc2022-x64-LLVM\fmt"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip fmt-eigen
+        $src = "install\msvc2022-x64-LLVM\fmt-eigen"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip cpptrace
+        $src = "install\msvc2022-x64-LLVM\cpptrace"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip magic_enum
+        $src = "install\msvc2022-x64-LLVM\magic_enum"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip libassert
+        $src = "install\msvc2022-x64-LLVM\libassert"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tclap
+        $src = "install\msvc2022-x64-LLVM\tclap"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip Catch2
+        $src = "install\msvc2022-x64-LLVM\Catch2"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip pipes
+        $src = "install\msvc2022-x64-LLVM\pipes"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip NamedType
+        $src = "install\msvc2022-x64-LLVM\NamedType"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tl-optional
+        $src = "install\msvc2022-x64-LLVM\tl-optional"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+        # zip tl-expected
+        $src = "install\msvc2022-x64-LLVM\tl-expected"
+        $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64-LLVM.zip"
+
+        if (Test-Path $dst) {
+            Remove-Item $dst
+        }
+
+        Compress-Archive -Path $src -DestinationPath $dst
+
+    # ---------------------------------------------------
+
+    # ---------------------------------------------------
+    # prepare artifacts section
+    - name: Upload Installation Artifacts windows-msvc2022-x64-LLVM
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows-msvc2022-x64-LLVM
+        if-no-files-found: error
+        path: |
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-windows-msvc2022-x64-LLVM.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-windows-msvc2022-x64-LLVM.zip
+    # ---------------------------------------------------
+
   # ---------------------------------------------------
   # create release section
   create-release:
     runs-on: ubuntu-latest
-    needs: [build-linux-linux-ninja, build-linux-linux-ninja-multi-config-clang]  # waits for all builds
+    needs: [build-linux-linux-ninja, build-linux-linux-ninja-multi-config-clang, build-windows-msvc2022-x64, build-windows-msvc2022-x64-LLVM]  # waits for all builds
     if: ${{ github.ref_type == 'tag' }}   # only on tag
     steps:
       - name: Download artifacts linux-linux-ninja
@@ -1001,6 +1846,18 @@ jobs:
           name: linux-linux-ninja-multi-config-clang
           path: linux-linux-ninja-multi-config-clang
 
+      - name: Download artifacts windows-msvc2022-x64
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-msvc2022-x64
+          path: windows-msvc2022-x64
+
+      - name: Download artifacts windows-msvc2022-x64-LLVM
+        uses: actions/download-artifact@v4
+        with:
+          name: windows-msvc2022-x64-LLVM
+          path: windows-msvc2022-x64-LLVM
+
       - name: Create GitHub release and upload assets
         uses: softprops/action-gh-release@v1
         with:
@@ -1010,6 +1867,8 @@ jobs:
           files: |
             linux-linux-ninja/*.zip
             linux-linux-ninja-multi-config-clang/*.zip
+            windows-msvc2022-x64/*.zip
+            windows-msvc2022-x64-LLVM/*.zip
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # ---------------------------------------------------
