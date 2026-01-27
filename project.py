@@ -2,12 +2,15 @@
 
 
 def checkout_func():
-    from csProjectManager.projectManager import csGetRepository, csRunCommand
+    from csProjectManager.projectManager import (
+        csGetRepository,
+        csRunCommand,
+        csGetPrecompiledLib,
+    )
 
     repo_cs_url = "git@github.com"
+    repo_https_url = "https://api.github.com/repos/"
     branch = "cs-main"
-
-    _ = csRunCommand
 
     csRunCommand(
         name="Install prerequisites for Linux",
@@ -53,7 +56,20 @@ def checkout_func():
     csGetRepository(repo_cs_url, "cscosine/tl-optional.git", "tl-optional", branch)
     csGetRepository(repo_cs_url, "cscosine/tl-expected.git", "tl-expected", branch)
 
-    pass
+    # get libraries
+    _ = repo_https_url  # avoid unused warning
+    _ = csGetPrecompiledLib  # avoid unused warning
+    # libs_os_presets: Dict[str, List[str]] = {
+    #     "linux": ["linux-ninja", "linux-ninja-multi-config-clang"],
+    #     "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
+    # }
+    # csGetPrecompiledLib(
+    #     repo_https_url + "cscosine",
+    #     "3rdPartyBaseLibs",
+    #     "Catch2",
+    #     "v0.1.0-test",
+    #     libs_os_presets,
+    # )
 
 
 def build_func():
