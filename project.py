@@ -59,17 +59,6 @@ def checkout_func():
     # get libraries
     _ = repo_https_url  # avoid unused warning
     _ = csGetPrecompiledLib  # avoid unused warning
-    # libs_os_presets: Dict[str, List[str]] = {
-    #     "linux": ["linux-ninja", "linux-ninja-multi-config-clang"],
-    #     "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
-    # }
-    # csGetPrecompiledLib(
-    #     repo_https_url + "cscosine",
-    #     "3rdPartyBaseLibs",
-    #     "Catch2",
-    #     "v0.1.0-test",
-    #     libs_os_presets,
-    # )
 
 
 def build_func():
