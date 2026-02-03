@@ -305,9 +305,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: shas-prev.txt
-          key: deps-sha-${{ github.ref_name }}
+          key: deps-sha-${{ github.ref_name }}-${{ github.run_id }}
           restore-keys: |
-            deps-sha-
+            deps-sha-${{ github.ref_name }}-
 
       # ---------------------------------------------------
       # Decide whether to build
@@ -345,7 +345,7 @@ jobs:
         uses: actions/cache@v4
         with:
           path: shas-prev.txt
-          key: deps-sha-${{ github.ref_name }}
+          key: deps-sha-${{ github.ref_name }}-${{ github.run_id }}
 
       # ---------------------------------------------------
       # 🔹 Show nice summary in Actions UI
