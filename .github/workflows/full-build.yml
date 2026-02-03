@@ -1293,7 +1293,7 @@ jobs:
         Write-Host "Using VERSION=$VERSION",
 
         # zip eigen3
-        $src = "install\msvc2022-x64\eigen3"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\eigen3"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1303,7 +1303,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt
-        $src = "install\msvc2022-x64\fmt"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\fmt"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1313,7 +1313,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt-eigen
-        $src = "install\msvc2022-x64\fmt-eigen"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\fmt-eigen"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1323,7 +1323,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip cpptrace
-        $src = "install\msvc2022-x64\cpptrace"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\cpptrace"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1333,7 +1333,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip magic_enum
-        $src = "install\msvc2022-x64\magic_enum"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\magic_enum"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1343,7 +1343,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip libassert
-        $src = "install\msvc2022-x64\libassert"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\libassert"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1353,7 +1353,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tclap
-        $src = "install\msvc2022-x64\tclap"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tclap"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1363,7 +1363,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip Catch2
-        $src = "install\msvc2022-x64\Catch2"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\Catch2"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1373,7 +1373,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip pipes
-        $src = "install\msvc2022-x64\pipes"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\pipes"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1383,7 +1383,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip NamedType
-        $src = "install\msvc2022-x64\NamedType"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\NamedType"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1393,7 +1393,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-optional
-        $src = "install\msvc2022-x64\tl-optional"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tl-optional"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1403,7 +1403,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-expected
-        $src = "install\msvc2022-x64\tl-expected"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tl-expected"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64.zip"
 
         if (Test-Path $dst) {
@@ -1697,7 +1697,7 @@ jobs:
         Write-Host "Using VERSION=$VERSION",
 
         # zip eigen3
-        $src = "install\msvc2022-x64-LLVM\eigen3"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\eigen3"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1707,7 +1707,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt
-        $src = "install\msvc2022-x64-LLVM\fmt"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\fmt"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1717,7 +1717,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt-eigen
-        $src = "install\msvc2022-x64-LLVM\fmt-eigen"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\fmt-eigen"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1727,7 +1727,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip cpptrace
-        $src = "install\msvc2022-x64-LLVM\cpptrace"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\cpptrace"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1737,7 +1737,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip magic_enum
-        $src = "install\msvc2022-x64-LLVM\magic_enum"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\magic_enum"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1747,7 +1747,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip libassert
-        $src = "install\msvc2022-x64-LLVM\libassert"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\libassert"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1757,7 +1757,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tclap
-        $src = "install\msvc2022-x64-LLVM\tclap"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tclap"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1767,7 +1767,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip Catch2
-        $src = "install\msvc2022-x64-LLVM\Catch2"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\Catch2"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1777,7 +1777,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip pipes
-        $src = "install\msvc2022-x64-LLVM\pipes"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\pipes"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1787,7 +1787,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip NamedType
-        $src = "install\msvc2022-x64-LLVM\NamedType"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\NamedType"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1797,7 +1797,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-optional
-        $src = "install\msvc2022-x64-LLVM\tl-optional"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tl-optional"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
@@ -1807,7 +1807,7 @@ jobs:
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-expected
-        $src = "install\msvc2022-x64-LLVM\tl-expected"
+        $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tl-expected"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64-LLVM.zip"
 
         if (Test-Path $dst) {
