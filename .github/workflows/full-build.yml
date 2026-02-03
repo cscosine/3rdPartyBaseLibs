@@ -137,6 +137,9 @@ jobs:
       should_build: ${{ steps.decision.outputs.should_build }}
 
     steps:
+      - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
+        run: sleep 60
+
       # checkout myself
       - name: checkout
         uses: actions/checkout@v4
@@ -372,8 +375,6 @@ jobs:
     # - name: Start tmate session
     #   uses: mxschmitt/action-tmate@v3
 
-    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
-      run: sleep 60
 
     # checkout myself
     - name: checkout
@@ -718,8 +719,6 @@ jobs:
     # - name: Start tmate session
     #   uses: mxschmitt/action-tmate@v3
 
-    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
-      run: sleep 60
 
     # checkout myself
     - name: checkout
@@ -1040,8 +1039,6 @@ jobs:
     runs-on: windows-latest
     steps:
 
-    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
-      run: sleep 60
 
     # checkout myself
     - name: checkout
@@ -1290,124 +1287,220 @@ jobs:
         }
 
         "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Append
-        Write-Host "Using VERSION=$VERSION",
+        Write-Host "Using VERSION=$VERSION"
 
         # zip eigen3
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\eigen3"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\fmt"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt-eigen
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\fmt-eigen"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip cpptrace
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\cpptrace"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip magic_enum
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\magic_enum"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip libassert
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\libassert"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tclap
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tclap"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip Catch2
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\Catch2"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip pipes
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\pipes"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip NamedType
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\NamedType"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-optional
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tl-optional"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
         }
 
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
+        }
+
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-expected
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64\tl-expected"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
@@ -1444,8 +1537,6 @@ jobs:
     runs-on: windows-latest
     steps:
 
-    - name: Debounce # prevent multiple quick successive runs with dependent and main repo updates
-      run: sleep 60
 
     # checkout myself
     - name: checkout
@@ -1694,124 +1785,220 @@ jobs:
         }
 
         "VERSION=$VERSION" | Out-File -FilePath $env:GITHUB_ENV -Append
-        Write-Host "Using VERSION=$VERSION",
+        Write-Host "Using VERSION=$VERSION"
 
         # zip eigen3
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\eigen3"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-eigen3-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\fmt"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip fmt-eigen
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\fmt-eigen"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-fmt-eigen-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip cpptrace
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\cpptrace"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-cpptrace-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip magic_enum
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\magic_enum"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-magic_enum-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip libassert
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\libassert"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-libassert-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tclap
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tclap"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tclap-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip Catch2
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\Catch2"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-Catch2-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip pipes
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\pipes"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-pipes-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip NamedType
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\NamedType"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-NamedType-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-optional
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tl-optional"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-optional-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
         }
 
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
+        }
+
         Compress-Archive -Path $src -DestinationPath $dst
 
         # zip tl-expected
+
         $src = "$env:GITHUB_WORKSPACE\install\msvc2022-x64-LLVM\tl-expected"
         $dst = "$env:GITHUB_WORKSPACE\bundle-3rdPartyBaseLibs-$VERSION-tl-expected-windows-msvc2022-x64-LLVM.zip"
+        Write-Host "*** src $src"
+        Write-Host "*** dst $dst"
 
         if (Test-Path $dst) {
             Remove-Item $dst
+        }
+
+
+        if (-not (Test-Path $src)) {
+          throw "Source path does not exist: $src"
         }
 
         Compress-Archive -Path $src -DestinationPath $dst
