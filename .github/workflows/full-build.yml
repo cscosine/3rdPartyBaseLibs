@@ -553,72 +553,259 @@ jobs:
     # ---------------------------------------------------
     # build section
     - name: Build linux-linux-ninja-eigen3 (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../eigen3-linux-linux-ninja-1-build_output.log
       working-directory: eigen3
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: eigen3-linux-linux-ninja-1-build_output.log
+        path: eigen3-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 eigen3-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-fmt (1 / 2)
-      run: cmake --workflow linux-ninja-debug
+      run: cmake --workflow linux-ninja-debug &> ../fmt-linux-linux-ninja-1-build_output.log
       working-directory: fmt
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-linux-linux-ninja-1-build_output.log
+        path: fmt-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 fmt-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     - name: Build linux-linux-ninja-fmt (2 / 2)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../fmt-linux-linux-ninja-2-build_output.log
       working-directory: fmt
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-linux-linux-ninja-2-build_output.log
+        path: fmt-linux-linux-ninja-2-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 fmt-linux-linux-ninja-2-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-fmt-eigen (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../fmt-eigen-linux-linux-ninja-1-build_output.log
       working-directory: fmt-eigen
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-eigen-linux-linux-ninja-1-build_output.log
+        path: fmt-eigen-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 fmt-eigen-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-cpptrace (1 / 2)
-      run: cmake --workflow linux-ninja-debug
+      run: cmake --workflow linux-ninja-debug &> ../cpptrace-linux-linux-ninja-1-build_output.log
       working-directory: cpptrace
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpptrace-linux-linux-ninja-1-build_output.log
+        path: cpptrace-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 cpptrace-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     - name: Build linux-linux-ninja-cpptrace (2 / 2)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../cpptrace-linux-linux-ninja-2-build_output.log
       working-directory: cpptrace
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpptrace-linux-linux-ninja-2-build_output.log
+        path: cpptrace-linux-linux-ninja-2-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 cpptrace-linux-linux-ninja-2-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-magic_enum (1 / 2)
-      run: cmake --workflow linux-ninja-debug
+      run: cmake --workflow linux-ninja-debug &> ../magic_enum-linux-linux-ninja-1-build_output.log
       working-directory: magic_enum
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: magic_enum-linux-linux-ninja-1-build_output.log
+        path: magic_enum-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 magic_enum-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     - name: Build linux-linux-ninja-magic_enum (2 / 2)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../magic_enum-linux-linux-ninja-2-build_output.log
       working-directory: magic_enum
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: magic_enum-linux-linux-ninja-2-build_output.log
+        path: magic_enum-linux-linux-ninja-2-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 magic_enum-linux-linux-ninja-2-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-libassert (1 / 2)
-      run: cmake --workflow linux-ninja-debug
+      run: cmake --workflow linux-ninja-debug &> ../libassert-linux-linux-ninja-1-build_output.log
       working-directory: libassert
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: libassert-linux-linux-ninja-1-build_output.log
+        path: libassert-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 libassert-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     - name: Build linux-linux-ninja-libassert (2 / 2)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../libassert-linux-linux-ninja-2-build_output.log
       working-directory: libassert
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: libassert-linux-linux-ninja-2-build_output.log
+        path: libassert-linux-linux-ninja-2-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 libassert-linux-linux-ninja-2-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-tclap (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../tclap-linux-linux-ninja-1-build_output.log
       working-directory: tclap
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tclap-linux-linux-ninja-1-build_output.log
+        path: tclap-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tclap-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-Catch2 (1 / 2)
-      run: cmake --workflow linux-ninja-debug
+      run: cmake --workflow linux-ninja-debug &> ../Catch2-linux-linux-ninja-1-build_output.log
       working-directory: Catch2
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: Catch2-linux-linux-ninja-1-build_output.log
+        path: Catch2-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 Catch2-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     - name: Build linux-linux-ninja-Catch2 (2 / 2)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../Catch2-linux-linux-ninja-2-build_output.log
       working-directory: Catch2
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: Catch2-linux-linux-ninja-2-build_output.log
+        path: Catch2-linux-linux-ninja-2-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 Catch2-linux-linux-ninja-2-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-pipes (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../pipes-linux-linux-ninja-1-build_output.log
       working-directory: pipes
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipes-linux-linux-ninja-1-build_output.log
+        path: pipes-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 pipes-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-NamedType (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../NamedType-linux-linux-ninja-1-build_output.log
       working-directory: NamedType
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: NamedType-linux-linux-ninja-1-build_output.log
+        path: NamedType-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 NamedType-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-tl-optional (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../tl-optional-linux-linux-ninja-1-build_output.log
       working-directory: tl-optional
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-optional-linux-linux-ninja-1-build_output.log
+        path: tl-optional-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tl-optional-linux-linux-ninja-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-tl-expected (1 / 1)
-      run: cmake --workflow linux-ninja-release
+      run: cmake --workflow linux-ninja-release &> ../tl-expected-linux-linux-ninja-1-build_output.log
       working-directory: tl-expected
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-expected-linux-linux-ninja-1-build_output.log
+        path: tl-expected-linux-linux-ninja-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tl-expected-linux-linux-ninja-1-build_output.log
+      working-directory: .
 
     # ---------------------------------------------------
 
@@ -897,52 +1084,184 @@ jobs:
     # ---------------------------------------------------
     # build section
     - name: Build linux-linux-ninja-multi-config-clang-eigen3 (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../eigen3-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: eigen3
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: eigen3-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: eigen3-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 eigen3-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-fmt (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../fmt-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: fmt
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: fmt-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 fmt-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-fmt-eigen (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../fmt-eigen-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: fmt-eigen
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-eigen-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: fmt-eigen-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 fmt-eigen-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-cpptrace (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../cpptrace-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: cpptrace
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpptrace-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: cpptrace-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 cpptrace-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-magic_enum (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../magic_enum-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: magic_enum
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: magic_enum-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: magic_enum-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 magic_enum-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-libassert (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../libassert-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: libassert
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: libassert-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: libassert-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 libassert-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-tclap (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../tclap-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: tclap
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tclap-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: tclap-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tclap-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-Catch2 (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../Catch2-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: Catch2
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: Catch2-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: Catch2-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 Catch2-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-pipes (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../pipes-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: pipes
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipes-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: pipes-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 pipes-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-NamedType (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../NamedType-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: NamedType
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: NamedType-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: NamedType-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 NamedType-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-tl-optional (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../tl-optional-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: tl-optional
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-optional-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: tl-optional-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tl-optional-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
+
     - name: Build linux-linux-ninja-multi-config-clang-tl-expected (1 / 1)
-      run: cmake --workflow linux-ninja-multi-config-clang
+      run: cmake --workflow linux-ninja-multi-config-clang &> ../tl-expected-linux-linux-ninja-multi-config-clang-1-build_output.log
       working-directory: tl-expected
+
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-expected-linux-linux-ninja-multi-config-clang-1-build_output.log
+        path: tl-expected-linux-linux-ninja-multi-config-clang-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: tail -n 200 tl-expected-linux-linux-ninja-multi-config-clang-1-build_output.log
+      working-directory: .
 
     # ---------------------------------------------------
 
@@ -1226,53 +1545,173 @@ jobs:
     # ---------------------------------------------------
     # build section
     - name: Build windows-msvc2022-x64-eigen3 (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../eigen3-windows-msvc2022-x64-1-build_output.log
       working-directory: eigen3
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: eigen3-windows-msvc2022-x64-1-build_output.log
+        path: eigen3-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content eigen3-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-fmt (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../fmt-windows-msvc2022-x64-1-build_output.log
       working-directory: fmt
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-windows-msvc2022-x64-1-build_output.log
+        path: fmt-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content fmt-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-fmt-eigen (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../fmt-eigen-windows-msvc2022-x64-1-build_output.log
       working-directory: fmt-eigen
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-eigen-windows-msvc2022-x64-1-build_output.log
+        path: fmt-eigen-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content fmt-eigen-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-cpptrace (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../cpptrace-windows-msvc2022-x64-1-build_output.log
       working-directory: cpptrace
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpptrace-windows-msvc2022-x64-1-build_output.log
+        path: cpptrace-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content cpptrace-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-magic_enum (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../magic_enum-windows-msvc2022-x64-1-build_output.log
       working-directory: magic_enum
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: magic_enum-windows-msvc2022-x64-1-build_output.log
+        path: magic_enum-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content magic_enum-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-libassert (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../libassert-windows-msvc2022-x64-1-build_output.log
       working-directory: libassert
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: libassert-windows-msvc2022-x64-1-build_output.log
+        path: libassert-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content libassert-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-tclap (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../tclap-windows-msvc2022-x64-1-build_output.log
       working-directory: tclap
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tclap-windows-msvc2022-x64-1-build_output.log
+        path: tclap-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tclap-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-Catch2 (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../Catch2-windows-msvc2022-x64-1-build_output.log
       working-directory: Catch2
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: Catch2-windows-msvc2022-x64-1-build_output.log
+        path: Catch2-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content Catch2-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-pipes (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../pipes-windows-msvc2022-x64-1-build_output.log
       working-directory: pipes
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipes-windows-msvc2022-x64-1-build_output.log
+        path: pipes-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content pipes-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-NamedType (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../NamedType-windows-msvc2022-x64-1-build_output.log
       working-directory: NamedType
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: NamedType-windows-msvc2022-x64-1-build_output.log
+        path: NamedType-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content NamedType-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-tl-optional (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../tl-optional-windows-msvc2022-x64-1-build_output.log
       working-directory: tl-optional
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-optional-windows-msvc2022-x64-1-build_output.log
+        path: tl-optional-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tl-optional-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-tl-expected (1 / 1)
-      run: cmake --workflow msvc2022-x64
+      run: cmake --workflow msvc2022-x64 *> ../tl-expected-windows-msvc2022-x64-1-build_output.log
       working-directory: tl-expected
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-expected-windows-msvc2022-x64-1-build_output.log
+        path: tl-expected-windows-msvc2022-x64-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tl-expected-windows-msvc2022-x64-1-build_output.log -Tail 200
+      working-directory: .
     # ---------------------------------------------------
 
     # ---------------------------------------------------
@@ -1724,53 +2163,173 @@ jobs:
     # ---------------------------------------------------
     # build section
     - name: Build windows-msvc2022-x64-LLVM-eigen3 (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../eigen3-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: eigen3
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: eigen3-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: eigen3-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content eigen3-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-fmt (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../fmt-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: fmt
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: fmt-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content fmt-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-fmt-eigen (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../fmt-eigen-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: fmt-eigen
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: fmt-eigen-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: fmt-eigen-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content fmt-eigen-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-cpptrace (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../cpptrace-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: cpptrace
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: cpptrace-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: cpptrace-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content cpptrace-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-magic_enum (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../magic_enum-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: magic_enum
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: magic_enum-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: magic_enum-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content magic_enum-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-libassert (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../libassert-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: libassert
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: libassert-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: libassert-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content libassert-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-tclap (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../tclap-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: tclap
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tclap-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: tclap-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tclap-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-Catch2 (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../Catch2-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: Catch2
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: Catch2-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: Catch2-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content Catch2-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-pipes (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../pipes-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: pipes
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: pipes-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: pipes-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content pipes-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-NamedType (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../NamedType-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: NamedType
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: NamedType-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: NamedType-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content NamedType-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-tl-optional (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../tl-optional-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: tl-optional
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-optional-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: tl-optional-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tl-optional-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     - name: Build windows-msvc2022-x64-LLVM-tl-expected (1 / 1)
-      run: cmake --workflow msvc2022-x64-LLVM
+      run: cmake --workflow msvc2022-x64-LLVM *> ../tl-expected-windows-msvc2022-x64-LLVM-1-build_output.log
       working-directory: tl-expected
 
+    - name: Upload build log
+      uses: actions/upload-artifact@v4
+      with:
+        name: tl-expected-windows-msvc2022-x64-LLVM-1-build_output.log
+        path: tl-expected-windows-msvc2022-x64-LLVM-1-build_output.log
+
+    - name: Show last lines on failure
+      if: failure()
+      run: Get-Content tl-expected-windows-msvc2022-x64-LLVM-1-build_output.log -Tail 200
+      working-directory: .
     # ---------------------------------------------------
 
     # ---------------------------------------------------
