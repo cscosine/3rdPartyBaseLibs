@@ -557,6 +557,7 @@ jobs:
       working-directory: eigen3
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: eigen3-linux-linux-ninja-1-build_output.log
@@ -572,6 +573,7 @@ jobs:
       working-directory: fmt
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-linux-linux-ninja-1-build_output.log
@@ -587,6 +589,7 @@ jobs:
       working-directory: fmt
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-linux-linux-ninja-2-build_output.log
@@ -602,6 +605,7 @@ jobs:
       working-directory: fmt-eigen
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-eigen-linux-linux-ninja-1-build_output.log
@@ -617,6 +621,7 @@ jobs:
       working-directory: cpptrace
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: cpptrace-linux-linux-ninja-1-build_output.log
@@ -632,6 +637,7 @@ jobs:
       working-directory: cpptrace
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: cpptrace-linux-linux-ninja-2-build_output.log
@@ -647,6 +653,7 @@ jobs:
       working-directory: magic_enum
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: magic_enum-linux-linux-ninja-1-build_output.log
@@ -662,6 +669,7 @@ jobs:
       working-directory: magic_enum
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: magic_enum-linux-linux-ninja-2-build_output.log
@@ -677,6 +685,7 @@ jobs:
       working-directory: libassert
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: libassert-linux-linux-ninja-1-build_output.log
@@ -692,6 +701,7 @@ jobs:
       working-directory: libassert
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: libassert-linux-linux-ninja-2-build_output.log
@@ -707,6 +717,7 @@ jobs:
       working-directory: tclap
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tclap-linux-linux-ninja-1-build_output.log
@@ -722,6 +733,7 @@ jobs:
       working-directory: Catch2
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Catch2-linux-linux-ninja-1-build_output.log
@@ -737,6 +749,7 @@ jobs:
       working-directory: Catch2
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Catch2-linux-linux-ninja-2-build_output.log
@@ -752,6 +765,7 @@ jobs:
       working-directory: pipes
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pipes-linux-linux-ninja-1-build_output.log
@@ -767,6 +781,7 @@ jobs:
       working-directory: NamedType
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: NamedType-linux-linux-ninja-1-build_output.log
@@ -782,6 +797,7 @@ jobs:
       working-directory: tl-optional
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-optional-linux-linux-ninja-1-build_output.log
@@ -797,6 +813,7 @@ jobs:
       working-directory: tl-expected
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-expected-linux-linux-ninja-1-build_output.log
@@ -1088,6 +1105,7 @@ jobs:
       working-directory: eigen3
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: eigen3-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1103,6 +1121,7 @@ jobs:
       working-directory: fmt
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1118,6 +1137,7 @@ jobs:
       working-directory: fmt-eigen
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-eigen-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1133,6 +1153,7 @@ jobs:
       working-directory: cpptrace
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: cpptrace-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1148,6 +1169,7 @@ jobs:
       working-directory: magic_enum
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: magic_enum-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1163,6 +1185,7 @@ jobs:
       working-directory: libassert
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: libassert-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1178,6 +1201,7 @@ jobs:
       working-directory: tclap
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tclap-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1193,6 +1217,7 @@ jobs:
       working-directory: Catch2
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Catch2-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1208,6 +1233,7 @@ jobs:
       working-directory: pipes
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pipes-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1223,6 +1249,7 @@ jobs:
       working-directory: NamedType
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: NamedType-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1238,6 +1265,7 @@ jobs:
       working-directory: tl-optional
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-optional-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1253,6 +1281,7 @@ jobs:
       working-directory: tl-expected
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-expected-linux-linux-ninja-multi-config-clang-1-build_output.log
@@ -1549,6 +1578,7 @@ jobs:
       working-directory: eigen3
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: eigen3-windows-msvc2022-x64-1-build_output.log
@@ -1563,6 +1593,7 @@ jobs:
       working-directory: fmt
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-windows-msvc2022-x64-1-build_output.log
@@ -1577,6 +1608,7 @@ jobs:
       working-directory: fmt-eigen
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-eigen-windows-msvc2022-x64-1-build_output.log
@@ -1591,6 +1623,7 @@ jobs:
       working-directory: cpptrace
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: cpptrace-windows-msvc2022-x64-1-build_output.log
@@ -1605,6 +1638,7 @@ jobs:
       working-directory: magic_enum
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: magic_enum-windows-msvc2022-x64-1-build_output.log
@@ -1619,6 +1653,7 @@ jobs:
       working-directory: libassert
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: libassert-windows-msvc2022-x64-1-build_output.log
@@ -1633,6 +1668,7 @@ jobs:
       working-directory: tclap
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tclap-windows-msvc2022-x64-1-build_output.log
@@ -1647,6 +1683,7 @@ jobs:
       working-directory: Catch2
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Catch2-windows-msvc2022-x64-1-build_output.log
@@ -1661,6 +1698,7 @@ jobs:
       working-directory: pipes
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pipes-windows-msvc2022-x64-1-build_output.log
@@ -1675,6 +1713,7 @@ jobs:
       working-directory: NamedType
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: NamedType-windows-msvc2022-x64-1-build_output.log
@@ -1689,6 +1728,7 @@ jobs:
       working-directory: tl-optional
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-optional-windows-msvc2022-x64-1-build_output.log
@@ -1703,6 +1743,7 @@ jobs:
       working-directory: tl-expected
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-expected-windows-msvc2022-x64-1-build_output.log
@@ -2167,6 +2208,7 @@ jobs:
       working-directory: eigen3
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: eigen3-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2181,6 +2223,7 @@ jobs:
       working-directory: fmt
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2195,6 +2238,7 @@ jobs:
       working-directory: fmt-eigen
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: fmt-eigen-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2209,6 +2253,7 @@ jobs:
       working-directory: cpptrace
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: cpptrace-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2223,6 +2268,7 @@ jobs:
       working-directory: magic_enum
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: magic_enum-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2237,6 +2283,7 @@ jobs:
       working-directory: libassert
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: libassert-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2251,6 +2298,7 @@ jobs:
       working-directory: tclap
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tclap-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2265,6 +2313,7 @@ jobs:
       working-directory: Catch2
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: Catch2-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2279,6 +2328,7 @@ jobs:
       working-directory: pipes
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: pipes-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2293,6 +2343,7 @@ jobs:
       working-directory: NamedType
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: NamedType-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2307,6 +2358,7 @@ jobs:
       working-directory: tl-optional
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-optional-windows-msvc2022-x64-LLVM-1-build_output.log
@@ -2321,6 +2373,7 @@ jobs:
       working-directory: tl-expected
 
     - name: Upload build log
+      if: always()
       uses: actions/upload-artifact@v4
       with:
         name: tl-expected-windows-msvc2022-x64-LLVM-1-build_output.log
