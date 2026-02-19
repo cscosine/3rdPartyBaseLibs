@@ -841,51 +841,51 @@ jobs:
 
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-eigen3-linux-linux-ninja.zip" eigen3
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-eigen3-linux-linux-ninja.tar.gz" eigen3
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-linux-linux-ninja.zip" fmt
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-linux-linux-ninja.tar.gz" fmt
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-eigen-linux-linux-ninja.zip" fmt-eigen
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-eigen-linux-linux-ninja.tar.gz" fmt-eigen
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-cpptrace-linux-linux-ninja.zip" cpptrace
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-cpptrace-linux-linux-ninja.tar.gz" cpptrace
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-magic_enum-linux-linux-ninja.zip" magic_enum
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-magic_enum-linux-linux-ninja.tar.gz" magic_enum
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-libassert-linux-linux-ninja.zip" libassert
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-libassert-linux-linux-ninja.tar.gz" libassert
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tclap-linux-linux-ninja.zip" tclap
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tclap-linux-linux-ninja.tar.gz" tclap
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-Catch2-linux-linux-ninja.zip" Catch2
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-Catch2-linux-linux-ninja.tar.gz" Catch2
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-pipes-linux-linux-ninja.zip" pipes
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-pipes-linux-linux-ninja.tar.gz" pipes
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-NamedType-linux-linux-ninja.zip" NamedType
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-NamedType-linux-linux-ninja.tar.gz" NamedType
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-optional-linux-linux-ninja.zip" tl-optional
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-optional-linux-linux-ninja.tar.gz" tl-optional
         )
         (
           cd install/linux-ninja/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-expected-linux-linux-ninja.zip" tl-expected
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-expected-linux-linux-ninja.tar.gz" tl-expected
         )
       shell: bash
     # ---------------------------------------------------
@@ -898,18 +898,18 @@ jobs:
         name: linux-linux-ninja
         if-no-files-found: error
         path: |
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-linux-linux-ninja.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-linux-linux-ninja.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-linux-linux-ninja.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-linux-linux-ninja.tar.gz
     # ---------------------------------------------------
 
   build-linux-linux-ninja-multi-config-clang:
@@ -1309,51 +1309,51 @@ jobs:
 
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-eigen3-linux-linux-ninja-multi-config-clang.zip" eigen3
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-eigen3-linux-linux-ninja-multi-config-clang.tar.gz" eigen3
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-linux-linux-ninja-multi-config-clang.zip" fmt
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-linux-linux-ninja-multi-config-clang.tar.gz" fmt
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-eigen-linux-linux-ninja-multi-config-clang.zip" fmt-eigen
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-fmt-eigen-linux-linux-ninja-multi-config-clang.tar.gz" fmt-eigen
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-cpptrace-linux-linux-ninja-multi-config-clang.zip" cpptrace
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-cpptrace-linux-linux-ninja-multi-config-clang.tar.gz" cpptrace
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-magic_enum-linux-linux-ninja-multi-config-clang.zip" magic_enum
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-magic_enum-linux-linux-ninja-multi-config-clang.tar.gz" magic_enum
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-libassert-linux-linux-ninja-multi-config-clang.zip" libassert
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-libassert-linux-linux-ninja-multi-config-clang.tar.gz" libassert
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tclap-linux-linux-ninja-multi-config-clang.zip" tclap
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tclap-linux-linux-ninja-multi-config-clang.tar.gz" tclap
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-Catch2-linux-linux-ninja-multi-config-clang.zip" Catch2
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-Catch2-linux-linux-ninja-multi-config-clang.tar.gz" Catch2
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-pipes-linux-linux-ninja-multi-config-clang.zip" pipes
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-pipes-linux-linux-ninja-multi-config-clang.tar.gz" pipes
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-NamedType-linux-linux-ninja-multi-config-clang.zip" NamedType
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-NamedType-linux-linux-ninja-multi-config-clang.tar.gz" NamedType
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-optional-linux-linux-ninja-multi-config-clang.zip" tl-optional
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-optional-linux-linux-ninja-multi-config-clang.tar.gz" tl-optional
         )
         (
           cd install/linux-ninja-multi-config-clang/
-          zip -r "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-expected-linux-linux-ninja-multi-config-clang.zip" tl-expected
+          tar -czf "$GITHUB_WORKSPACE/bundle-3rdPartyBaseLibs-${VERSION}-tl-expected-linux-linux-ninja-multi-config-clang.tar.gz" tl-expected
         )
       shell: bash
     # ---------------------------------------------------
@@ -1366,18 +1366,18 @@ jobs:
         name: linux-linux-ninja-multi-config-clang
         if-no-files-found: error
         path: |
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-linux-linux-ninja-multi-config-clang.zip
-          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-linux-linux-ninja-multi-config-clang.zip
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-eigen3-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-fmt-eigen-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-cpptrace-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-magic_enum-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-libassert-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tclap-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-Catch2-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-pipes-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-NamedType-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-optional-linux-linux-ninja-multi-config-clang.tar.gz
+          bundle-3rdPartyBaseLibs-${{ env.VERSION }}-tl-expected-linux-linux-ninja-multi-config-clang.tar.gz
     # ---------------------------------------------------
 
   build-windows-msvc2022-x64:
@@ -2680,8 +2680,8 @@ jobs:
           name: Release ${{ github.ref_name }}
           fail_on_unmatched_files: true
           files: |
-            linux-linux-ninja/*.zip
-            linux-linux-ninja-multi-config-clang/*.zip
+            linux-linux-ninja/*.tar.gz
+            linux-linux-ninja-multi-config-clang/*.tar.gz
             windows-msvc2022-x64/*.zip
             windows-msvc2022-x64-LLVM/*.zip
         env:
