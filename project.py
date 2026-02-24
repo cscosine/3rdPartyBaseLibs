@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+from typing import Dict
+
 
 def checkout_func():
     from csProjectManager.projectManager import (
@@ -62,7 +64,7 @@ def checkout_func():
 
 
 def build_func():
-    from csProjectManager.projectManager import csWorkflow
+    from csProjectManager.projectManager import csWorkflow, csSetRunsOnMap
 
     # for interface only libraries, generate a single configuration only (use release)
     # note, use the {} to enable properly the -po option (preset only)
@@ -100,6 +102,21 @@ def build_func():
             "msvc2026-x64-LLVM",
         ],
     }
+
+    runs_on_map: Dict[str, Dict[str, str]] = {
+        "linux": {
+            "linux-ninja": "ubuntu-latest",
+            "linux-ninja-multi-config-clang": "ubuntu-latest",
+        },
+        "windows": {
+            "msvc2022-x64": "windows-latest",
+            "msvc2022-x64-LLVM": "windows-latest",
+            "msvc2026-x64": "windows-2025-vs2026",
+            "msvc2026-x64-LLVM": "windows-2025-vs2026",
+        },
+    }
+
+    csSetRunsOnMap(runs_on_map)
 
     # eigen
     csWorkflow("eigen3", presetRelease)

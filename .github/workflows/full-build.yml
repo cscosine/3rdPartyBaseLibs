@@ -2657,7 +2657,7 @@ jobs:
     needs: guard
     if: needs.guard.outputs.should_build == 'true'
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
 
 
@@ -3287,7 +3287,7 @@ jobs:
     needs: guard
     if: needs.guard.outputs.should_build == 'true'
 
-    runs-on: windows-latest
+    runs-on: windows-2025-vs2026
     steps:
 
 
