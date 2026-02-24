@@ -68,13 +68,23 @@ def build_func():
     # note, use the {} to enable properly the -po option (preset only)
     presetRelease = {
         "linux": ["linux-ninja{release}", "linux-ninja-multi-config-clang"],
-        "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
+        "windows": [
+            "msvc2022-x64",
+            "msvc2022-x64-LLVM",
+            "msvc2026-x64",
+            "msvc2026-x64-LLVM",
+        ],
     }
 
     # use {debug|release}
     presetDebugRelease = {
         "linux": ["linux-ninja{debug|release}", "linux-ninja-multi-config-clang"],
-        "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
+        "windows": [
+            "msvc2022-x64",
+            "msvc2022-x64-LLVM",
+            "msvc2026-x64",
+            "msvc2026-x64-LLVM",
+        ],
     }
 
     # use {debug|release|relWithDebInfo|paranoid}
@@ -83,7 +93,12 @@ def build_func():
             "linux-ninja{debug|release|relWithDebInfo|paranoid}",
             "linux-ninja-multi-config-clang",
         ],
-        "windows": ["msvc2022-x64", "msvc2022-x64-LLVM"],
+        "windows": [
+            "msvc2022-x64",
+            "msvc2022-x64-LLVM",
+            "msvc2026-x64",
+            "msvc2026-x64-LLVM",
+        ],
     }
 
     # eigen
