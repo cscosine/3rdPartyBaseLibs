@@ -82,6 +82,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Setup CMake
+        uses: lukka/get-cmake@latest
+
       - name: Show OS and compiler info
         run: |
           echo "=== OS Information ==="
@@ -93,7 +96,7 @@ jobs:
           echo "=== GCC Version (if installed) ==="
           gcc --version || echo "gcc not found"
           echo ""
-          echo "=== CMake Version (if installed) ==="
+          echo "=== CMake Version ==="
           cmake --version || echo "cmake not found"
           echo ""
           echo "=== Ninja Version (if installed) ==="
@@ -549,6 +552,11 @@ jobs:
       working-directory: .
     # ---------------------------------------------------
 
+    # note: keep setup cmake after msvc setup to have the correct cmake in path
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+
+    # ---------------------------------------------------
 
     # ---------------------------------------------------
     # build section
@@ -1097,6 +1105,11 @@ jobs:
       working-directory: .
     # ---------------------------------------------------
 
+    # note: keep setup cmake after msvc setup to have the correct cmake in path
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+
+    # ---------------------------------------------------
 
     # ---------------------------------------------------
     # build section
