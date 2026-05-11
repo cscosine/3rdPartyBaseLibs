@@ -1,239 +1,32 @@
 #!/usr/bin/env python3
 
-from typing import Dict
+from csorchestrator.orchestrator.orchestrator import Orchestrator
+from csorchestrator.orchestrator.execution import validate_and_execute_orchestrator
+from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
+from csorchestrator.reporters.orchestrator_executor_reporter_print import OrchestratorExecutorReporterPrint
 
+o = Orchestrator ()
+p = o.create_phase("Repo Update")
+p.add_step(
+    StepGetRepository(
+        repo_type=RepositoryType.GIT,
+        name="csCMake",
+        description="The cscosine CMake facilitator",
+        target_directory="src/csCMake",
+        repo_url="git@github.com:cscosine/csCMake.git",
+        repo_ref="cs-main",
+    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
+)
 
-def checkout_func():
-    from csProjectManager.projectManager import (
-        csGetRepository,
-        csRunCommand,
-        csGetPrecompiledLib,
-    )
+p.add_step(
+    StepGetRepository(
+        repo_type=RepositoryType.GIT,
+        name="eigen3",
+        description="The cscosine eigen3 library",
+        target_directory="src/eigen3",
+        repo_url="git@github.com:cscosine/eigen3.git",
+        repo_ref="cs-main",
+    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
+)
 
-    repo_cs_url = "git@github.com"
-    repo_https_url = "https://api.github.com/repos/"
-    branch = "cs-main"
-
-    csRunCommand(
-        name="Install prerequisites for Linux",
-        command="./installRequirements-linux.sh",
-        os_name="linux",
-    )
-
-    csGetRepository(
-        repo_cs_url,
-        "cscosine/csCMake.git",
-        "csCMake",
-        branch,
-        needCMakeUserPathFile=False,
-    )
-
-    csGetRepository(repo_cs_url, "cscosine/eigen3.git", "eigen3", branch)
-
-    # fmt fork
-    csGetRepository(repo_cs_url, "cscosine/fmt.git", "fmt", branch)
-
-    # fmt-eigen fork
-    csGetRepository(repo_cs_url, "cscosine/fmt-eigen.git", "fmt-eigen", branch)
-
-    csGetRepository(
-        repo_cs_url, "cscosine/cpptrace.git", "cpptrace", branch
-    )  # v0.8.2 + fixes
-    csGetRepository(
-        repo_cs_url, "cscosine/magic_enum.git", "magic_enum", branch
-    )  # v0.9.7 + fixes
-    csGetRepository(
-        repo_cs_url, "cscosine/libassert.git", "libassert", branch
-    )  # v2.15 + fixes
-
-    csGetRepository(repo_cs_url, "cscosine/tclap.git", "tclap", branch)  # v2.15 + fixes
-
-    csGetRepository(repo_cs_url, "cscosine/Catch2.git", "Catch2", branch)
-
-    # joboccara forks
-    csGetRepository(repo_cs_url, "cscosine/pipes.git", "pipes", branch)
-    csGetRepository(repo_cs_url, "cscosine/NamedType.git", "NamedType", branch)
-
-    # TartanLlama forks
-    csGetRepository(repo_cs_url, "cscosine/tl-optional.git", "tl-optional", branch)
-    csGetRepository(repo_cs_url, "cscosine/tl-expected.git", "tl-expected", branch)
-
-    # get libraries
-    _ = repo_https_url  # avoid unused warning
-    _ = csGetPrecompiledLib  # avoid unused warning
-
-
-def build_func():
-    from csProjectManager.projectManager import csWorkflow, csSetRunsOnMap
-
-    # for interface only libraries, generate a single configuration only (use release)
-    # note, use the {} to enable properly the -po option (preset only)
-    presetRelease = {
-        "linux": ["linux-ninja{release}", "linux-ninja-multi-config-clang"],
-        "windows": [
-            "msvc2022-x64",
-            "msvc2022-x64-LLVM",
-            "msvc2026-x64",
-            "msvc2026-x64-LLVM",
-        ],
-    }
-
-    # use {debug|release}
-    presetDebugRelease = {
-        "linux": ["linux-ninja{debug|release}", "linux-ninja-multi-config-clang"],
-        "windows": [
-            "msvc2022-x64",
-            "msvc2022-x64-LLVM",
-            "msvc2026-x64",
-            "msvc2026-x64-LLVM",
-        ],
-    }
-
-    # use {debug|release|relWithDebInfo|paranoid}
-    presetsAll = {
-        "linux": [
-            "linux-ninja{debug|release|relWithDebInfo|paranoid}",
-            "linux-ninja-multi-config-clang",
-        ],
-        "windows": [
-            "msvc2022-x64",
-            "msvc2022-x64-LLVM",
-            "msvc2026-x64",
-            "msvc2026-x64-LLVM",
-        ],
-    }
-
-    runs_on_map: Dict[str, Dict[str, str]] = {
-        "linux": {
-            "linux-ninja": "ubuntu-latest",
-            "linux-ninja-multi-config-clang": "ubuntu-latest",
-        },
-        "windows": {
-            "msvc2022-x64": "windows-latest",
-            "msvc2022-x64-LLVM": "windows-latest",
-            "msvc2026-x64": "windows-2025-vs2026",
-            "msvc2026-x64-LLVM": "windows-2025-vs2026",
-        },
-    }
-
-    csSetRunsOnMap(runs_on_map)
-
-    # eigen
-    csWorkflow("eigen3", presetRelease)
-
-    # fmt has a lib, build in debug and release
-    csWorkflow("fmt", presetDebugRelease)
-
-    # fmt-eigen is interface only, but needs fmt and needs to be compiled with all presets
-    csWorkflow("fmt-eigen", presetRelease)
-
-    # all base libraries gets compiled in debug and release
-    csWorkflow("cpptrace", presetDebugRelease)
-    csWorkflow("magic_enum", presetDebugRelease)
-    csWorkflow("libassert", presetDebugRelease)
-
-    # tclap is interface only
-    csWorkflow("tclap", presetRelease)
-
-    csWorkflow("Catch2", presetDebugRelease)
-
-    # pipes and NamedType are inteface only, but they need Catch2
-    csWorkflow("pipes", presetRelease)
-    csWorkflow("NamedType", presetRelease)
-
-    # optional and expected are inteface only, but they need Catch2
-    csWorkflow("tl-optional", presetRelease)
-    csWorkflow("tl-expected", presetRelease)
-
-    _ = presetsAll  # unused
-
-
-############################################################################################
-## -- BEGIN AUTOGENERATED CODE - DO NOT EDIT BELOW THIS POINT - IT WILL BE OVERWRITTEN -- ##
-
-
-def main():
-    import os
-    import sys
-
-    sys.stdout.reconfigure(encoding="utf-8")
-    sys.stderr.reconfigure(encoding="utf-8")
-
-    # Ensure script runs from its own directory
-    script_dir = os.path.dirname(os.path.abspath(__file__))
-    current_dir = os.getcwd()
-
-    if current_dir != script_dir:
-        print(
-            f"Warning: The current directory ({current_dir}) is not the same as the script's directory ({script_dir}), changing to {script_dir}"
-        )
-        os.chdir(script_dir)
-
-    # get the repository to setup the project,
-    csProjectManager_dir = "csProjectManager"
-    csProjectManager_base_url = "git@github.com"
-    csProjectManager_repo = "cscosine/csProjectManager.git"
-    csProjectManager_branch = "cs-main"
-
-    # if it does not exists, clone it
-    if not os.path.isdir(csProjectManager_dir):
-        try:
-            print(
-                f"Cloning the repository {csProjectManager_base_url}:{csProjectManager_repo} on branch {csProjectManager_branch} to {csProjectManager_dir}..."
-            )
-            Repo.clone_from(
-                csProjectManager_base_url + ":" + csProjectManager_repo,
-                csProjectManager_dir,
-                branch=csProjectManager_branch,
-            )
-            print("... done")
-        except GitCommandError as e:
-            print(f"-- Git operation failed: {e}", file=sys.stderr)
-            sys.exit(1)
-
-    # Add csProjectManager directory to sys.path to allow module imports
-    sys.path.insert(0, os.path.abspath(csProjectManager_dir))
-    try:
-        print("Successfully imported csProjectManager module.")
-
-        from csProjectManager.projectManager import csSetupProject, RepoCheckoutCommands
-        from csProjectManager.lib.preCommitHooks import is_pre_commit_installed
-
-        # check if precommit is available, will fail with error message in case
-        is_pre_commit_installed()
-
-        csSetupProject(
-            csProjectManager=RepoCheckoutCommands(
-                directory=csProjectManager_dir,
-                base_url=csProjectManager_base_url,
-                repo=csProjectManager_repo,
-                branch=csProjectManager_branch,
-                needCMakeUserPathFile=False,
-                generateDependentRepoAction=True,
-            ),
-            checkout_func=checkout_func,
-            build_func=build_func,
-            original_exec_dir=current_dir,
-        )
-    except ImportError as e:
-        print(f"Failed to import csProjectManager: {e}", file=sys.stderr)
-        sys.exit(1)
-
-
-# Check if GitPython is installed
-try:
-    from git import Repo, GitCommandError
-except ImportError:
-    import sys
-
-    print(
-        "GitPython is not installed. Please install it using, for example, pip install GitPython",
-        file=sys.stderr,
-    )
-    sys.exit(1)
-
-if __name__ == "__main__":
-    main()
-
-## --  END AUTOGENERATED CODE - DO NOT EDIT ABOVE THIS POINT - IT WILL BE OVERWRITTEN --  ##
-############################################################################################
+validate_and_execute_orchestrator(o, "./", OrchestratorExecutorReporterPrint())
