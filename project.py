@@ -14,7 +14,7 @@ p.add_step(
         description="The cscosine CMake facilitator",
         target_directory="src/csCMake",
         repo_url="git@github.com:cscosine/csCMake.git",
-        repo_ref="cs-main",
+        repo_ref="orchestrator",
     ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
 )
 
@@ -25,8 +25,44 @@ p.add_step(
         description="The cscosine eigen3 library",
         target_directory="src/eigen3",
         repo_url="git@github.com:cscosine/eigen3.git",
-        repo_ref="cs-main",
+        repo_ref="orchestrator",
     ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
 )
+
+p = o.create_phase("Configure")
+
+## p.add_step(
+##     StepCMake("eigen3", CMakeStep.CONFIGURE, "linux-ninja-release")
+## )
+## p.add_step(
+##     StepCMake("eigen3", CMakeStep.CONFIGURE, "linux-ninja-debug")
+## )
+## 
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-release")
+## )
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-debug")
+## )
+## 
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-release-install")
+## )
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-debug-install")
+## )
+## 
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.TEST, "linux-ninja-release-test")
+## )
+## p.add_step(
+##     StepCMake("eigen3",  CMakeStep.TEST, "linux-ninja-debug-test")
+## )
+## 
+# p.add_step(
+#     StepCMake("eigen3",  CMakeStep.WORKFLOW, "linux-ninja-debug-test")
+# )
+
+# to be complete CMakeStep.PACKAGE -> packagePresets
 
 validate_and_execute_orchestrator(o, "./", OrchestratorExecutorReporterPrint())
