@@ -12,7 +12,7 @@ p.add_step(
         repo_type=RepositoryType.GIT,
         name="csCMake",
         description="The cscosine CMake facilitator",
-        target_directory="src/csCMake",
+        target_directory="workspace/csCMake",
         repo_url="git@github.com:cscosine/csCMake.git",
         repo_ref="orchestrator",
     ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
@@ -23,7 +23,7 @@ p.add_step(
         repo_type=RepositoryType.GIT,
         name="eigen3",
         description="The cscosine eigen3 library",
-        target_directory="src/eigen3",
+        target_directory="workspace/eigen3",
         repo_url="git@github.com:cscosine/eigen3.git",
         repo_ref="orchestrator",
     ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
