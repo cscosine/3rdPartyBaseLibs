@@ -29,6 +29,28 @@ p.add_step(
     ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
 )
 
+p.add_step(
+    StepGetRepository(
+        repo_type=RepositoryType.GIT,
+        name="fmt",
+        description="The fmt library",
+        target_directory="workspace/fmt",
+        repo_url="git@github.com:cscosine/fmt.git",
+        repo_ref="orchestrator",
+    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
+)
+
+p.add_step(
+    StepGetRepository(
+        repo_type=RepositoryType.GIT,
+        name="fmt-eigen",
+        description="The fmt-eigen library",
+        target_directory="workspace/fmt-eigen",
+        repo_url="git@github.com:cscosine/fmt-eigen.git",
+        repo_ref="orchestrator",
+    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
+)
+
 p = o.create_phase("Configure")
 
 ## p.add_step(
