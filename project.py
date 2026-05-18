@@ -3,88 +3,84 @@
 from csorchestrator.orchestrator.orchestrator import Orchestrator
 from csorchestrator.orchestrator.execution import validate_and_execute_orchestrator
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
+from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.reporters.orchestrator_executor_reporter_print import OrchestratorExecutorReporterPrint
+from cscmake.utils.supported_variants import GeneratorType, BuildConfig, get_supported_combined_workflow_for_multi_config_generators, get_supported_context_os_architecture_list_string, get_all_supported_workflow_names_list
+from csorchestrator.orchestrator.orchestrator_executor import flatten_orchestrator_executor_visit_reports
+
+non_build_repos = [
+    {
+        "name": "csCMake",
+        "description": "The cscosine CMake facilitator",
+        "target_directory": "workspace/csCMake",
+        "repo_url": "git@github.com:cscosine/csCMake.git",
+    },
+]
+
+build_repos = [
+    {
+        "name": "eigen3",
+        "description": "The cscosine eigen3 library",
+        "target_directory": "workspace/eigen3",
+        "repo_url": "git@github.com:cscosine/eigen3.git",
+        "configs": [BuildConfig.RELEASE]
+    },
+    {
+        "name": "fmt",
+        "description": "The fmt library",
+        "target_directory": "workspace/fmt",
+        "repo_url": "git@github.com:cscosine/fmt.git",
+        "configs": [BuildConfig.DEBUG, BuildConfig.RELEASE]
+    },
+    {
+        "name": "fmt-eigen",
+        "description": "The fmt-eigen library",
+        "target_directory": "workspace/fmt-eigen",
+        "repo_url": "git@github.com:cscosine/fmt-eigen.git",
+        "configs": [BuildConfig.RELEASE]
+    },
+]
 
 o = Orchestrator ()
-p = o.create_phase("Repo Update")
-p.add_step(
-    StepGetRepository(
-        repo_type=RepositoryType.GIT,
-        name="csCMake",
-        description="The cscosine CMake facilitator",
-        target_directory="workspace/csCMake",
-        repo_url="git@github.com:cscosine/csCMake.git",
-        repo_ref="orchestrator",
-    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
-)
+p = o.create_phase("Repos Update")
 
-p.add_step(
-    StepGetRepository(
-        repo_type=RepositoryType.GIT,
-        name="eigen3",
-        description="The cscosine eigen3 library",
-        target_directory="workspace/eigen3",
-        repo_url="git@github.com:cscosine/eigen3.git",
-        repo_ref="orchestrator",
-    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
-)
+skip_get_repository = False
 
-p.add_step(
-    StepGetRepository(
-        repo_type=RepositoryType.GIT,
-        name="fmt",
-        description="The fmt library",
-        target_directory="workspace/fmt",
-        repo_url="git@github.com:cscosine/fmt.git",
-        repo_ref="orchestrator",
-    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
-)
+if skip_get_repository:
+    print("Skipping repository cloning steps")
+else:
+    for repo in non_build_repos + build_repos:
+        p.add_step(
+            StepGetRepository(
+                repo_type=RepositoryType.GIT,
+                name=repo["name"],
+                description=repo["description"],
+                target_directory=repo["target_directory"],
+                repo_url=repo["repo_url"],
+                repo_ref="orchestrator",
+            ).add_extra(
+                StepGetRepositoryExtraDepthOne(
+                    on_local_checkout=False,
+                    on_github_action_checkout=True,
+                )
+            )
+        )
 
-p.add_step(
-    StepGetRepository(
-        repo_type=RepositoryType.GIT,
-        name="fmt-eigen",
-        description="The fmt-eigen library",
-        target_directory="workspace/fmt-eigen",
-        repo_url="git@github.com:cscosine/fmt-eigen.git",
-        repo_ref="orchestrator",
-    ).add_extra(StepGetRepositoryExtraDepthOne(on_local_checkout=False, on_github_action_checkout=True))
-)
+for repo in build_repos:
+    p = o.create_phase(f"{repo['name']} Configure-Build-Test-Install")
+    workflow_names = get_all_supported_workflow_names_list(repo["configs"])
 
-p = o.create_phase("Configure")
+    for workflow_name in workflow_names:
+        p.add_step(
+            StepCMakeWorkflow(
+                name = f"{repo['name']} CMake Workflow {workflow_name}",
+                description=f"CMake workflow for {repo['name']} with configs: {repo['configs']}",
+                source_dir=repo["target_directory"],
+                workflow_name=workflow_name,
+            )
+        )
 
-## p.add_step(
-##     StepCMake("eigen3", CMakeStep.CONFIGURE, "linux-ninja-release")
-## )
-## p.add_step(
-##     StepCMake("eigen3", CMakeStep.CONFIGURE, "linux-ninja-debug")
-## )
-## 
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-release")
-## )
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-debug")
-## )
-## 
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-release-install")
-## )
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.BUILD, "linux-ninja-debug-install")
-## )
-## 
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.TEST, "linux-ninja-release-test")
-## )
-## p.add_step(
-##     StepCMake("eigen3",  CMakeStep.TEST, "linux-ninja-debug-test")
-## )
-## 
-# p.add_step(
-#     StepCMake("eigen3",  CMakeStep.WORKFLOW, "linux-ninja-debug-test")
-# )
 
-# to be complete CMakeStep.PACKAGE -> packagePresets
-
-validate_and_execute_orchestrator(o, "./", OrchestratorExecutorReporterPrint())
+executionResult = validate_and_execute_orchestrator(o, "./", OrchestratorExecutorReporterPrint())
+executionResult.report_pre_execution.print()
+flatten_orchestrator_executor_visit_reports(executionResult.report_execution).print()
