@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
-from typing import TypeAlias
+import sys
+from pathlib import Path
+from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.orchestrator import Orchestrator, print_orchestrator_executor_minimal_description
-from csorchestrator.orchestrator.execution import validate_and_execute_orchestrator
+from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.reporters.orchestrator_executor_reporter_print import OrchestratorExecutorReporterPrint
-from csorchestrator.utils.presets.supported_variants import GeneratorType, BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
-from csorchestrator.orchestrator.orchestrator_executor import flatten_orchestrator_executor_visit_reports
+from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
-
-OptionalOrchestratorWithReport: TypeAlias = OptionalResultWithReport[Orchestrator]
+from csorchestrator.cli import orchestrator_main_with_default_run
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
+    report = Report()
     non_build_repos = [
         {
             "name": "csCMake",
@@ -50,10 +49,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     o = Orchestrator ()
     p = o.create_phase("Repos Update")
 
-    skip_get_repository = False
+    skip_get_repository = True
+    skip_build = True
 
     if skip_get_repository:
-        print("Skipping repository cloning steps")
+        report.append_warning("Skipping repository cloning steps")
     else:
         for repo in non_build_repos + build_repos:
             p.add_step(
@@ -72,33 +72,29 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 )
             )
 
-    for repo in build_repos:
-        p = o.create_phase(f"{repo['name']} Configure-Build-Test-Install")
-        workflow_descriptions = get_all_supported_workflow_descriptions(repo["config"])
-
-        for workflow_description in workflow_descriptions:
-            workflow_name = workflow_name_from_description(workflow_description)
-            p.add_step(
-                StepCMakeWorkflow(
-                    name = f"{repo['name']} CMake Workflow {workflow_name}",
-                    description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
-                    source_dir=repo["target_directory"],
-                    workflow_description=workflow_description,
-                )
-            )
-    return OptionalResultWithReport.createResultAndReport(o, Report())
-
-def execute() -> None:
-    orchestratorResult = create_orchestrator()
-    if orchestratorResult.result is None:
-        orchestratorResult.report.print()
+    if skip_build:
+        report.append_warning("Skipping build steps")
     else:
-        executionResult = validate_and_execute_orchestrator(orchestratorResult.result, "./", OrchestratorExecutorReporterPrint())
-        
-        # debug prints
-        print_orchestrator_executor_minimal_description(executionResult.execution_description)
-        executionResult.report_pre_execution.print()
-        flatten_orchestrator_executor_visit_reports(executionResult.report_execution).print()
+        for repo in build_repos:
+            p = o.create_phase(f"{repo['name']} Configure-Build-Test-Install")
+            workflow_descriptions = get_all_supported_workflow_descriptions(repo["config"])
+
+            for workflow_description in workflow_descriptions:
+                workflow_name = workflow_name_from_description(workflow_description)
+                p.add_step(
+                    StepCMakeWorkflow(
+                        name = f"{repo['name']} CMake Workflow {workflow_name}",
+                        description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
+                        source_dir=repo["target_directory"],
+                        workflow_description=workflow_description,
+                    )
+                )
+    return OptionalResultWithReport.createResultAndReport(o, report)
+
+def main(argv: Sequence[str] | None = None) -> int:
+    script_path = str(Path(__file__).resolve())
+    return orchestrator_main_with_default_run(script_path, argv)
+
 
 if __name__ == "__main__":
-    execute()
+    sys.exit(main())
