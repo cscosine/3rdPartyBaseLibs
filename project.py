@@ -9,7 +9,7 @@ from csorchestrator.step.step_get_repository import StepGetRepository,Repository
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
-from csorchestrator.cli import orchestrator_main_with_default_run
+from csorchestrator.cli.cli import orchestrator_main_with_default_run
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -49,7 +49,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     o = Orchestrator ()
     p = o.create_phase("Repos Update")
 
-    skip_get_repository = True
+    skip_get_repository = False
     skip_build = True
 
     if skip_get_repository:
