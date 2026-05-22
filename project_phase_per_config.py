@@ -7,7 +7,8 @@ from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.utils.presets.supported_variants import create_context_os_architecture_compiler_generator_string, BuildConfig, ContextOsArchitectureCompilerGenerator, create_context_os_architecture_compiler_generator_string_unique, get_all_supported_workflow_descriptions, get_all_supported_workflow_descriptions_per_os_arch, get_supported_context_os_architecture_list, workflow_name_from_description
+from csorchestrator.context.context_os_architecture_compiler_generator import create_context_os_architecture_compiler_generator_string
+from csorchestrator.utils.presets.supported_variants import BuildConfig, ContextOsArchitectureCompilerGenerator, get_all_supported_workflow_descriptions, get_supported_context_os_architecture_list, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
 
@@ -78,10 +79,10 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         configs : list[ContextOsArchitectureCompilerGenerator] = get_supported_context_os_architecture_list() 
 
         for config in configs:    
-            config_name = create_context_os_architecture_compiler_generator_string_unique(config)
+            config_name = create_context_os_architecture_compiler_generator_string(config)
             p = o.create_phase(f"{config_name} Configure-Build-Test-Install")
             for repo in build_repos:
-                workflow_descriptions = get_all_supported_workflow_descriptions_per_os_arch(config, repo["config"])
+                workflow_descriptions = get_all_supported_workflow_descriptions(os_arch_generator = config, selected_config = repo["config"])
                 for workflow_description in workflow_descriptions:
                     workflow_name = workflow_name_from_description(workflow_description)
                     p.add_step(
