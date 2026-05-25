@@ -7,6 +7,7 @@ from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
+from csorchestrator.orchestrator.step_base import StepExecuteOnMatchingContext
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
@@ -87,7 +88,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                         description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
                         source_dir=repo["target_directory"],
                         workflow_description=workflow_description,
-                    )
+                    ).add_extra(StepExecuteOnMatchingContext())
                 )
     return OptionalResultWithReport.createResultAndReport(o, report)
 
