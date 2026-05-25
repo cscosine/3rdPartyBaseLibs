@@ -83,7 +83,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             for workflow_description in workflow_descriptions:
                 workflow_name = workflow_name_from_description(workflow_description)
                 p.add_step(
-                    StepCMakeWorkflow(
+                    StepCMakeWorkflow.create_from_workflow_description(
                         name = f"{repo['name']} CMake Workflow {workflow_name}",
                         description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
                         source_dir=repo["target_directory"],

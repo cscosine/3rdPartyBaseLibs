@@ -8,8 +8,7 @@ from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrche
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.orchestrator.step_base import StepExecuteOnMatchingContext
-from csorchestrator.context.context_os_architecture_compiler_generator import create_context_os_architecture_compiler_generator_string
-from csorchestrator.utils.presets.supported_variants import BuildConfig, ContextOsArchitectureCompilerGenerator, get_all_supported_workflow_descriptions, get_supported_context_os_architecture_list, workflow_name_from_description
+from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
 
@@ -49,6 +48,13 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     ]
 
     o = Orchestrator ()
+
+    # o.set_execution_matrix(
+    #     ExecutionMatrixOsArchCompilerGenerator(
+    #         configs : list[ContextOsArchitectureCompilerGenerator] = get_supported_context_os_architecture_list()
+    #     )
+    # )
+
     p = o.create_phase("Repos Update")
 
     skip_get_repository = True
@@ -77,23 +83,17 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     if skip_build:
         report.append_warning("Skipping build steps")
     else:
-        configs : list[ContextOsArchitectureCompilerGenerator] = get_supported_context_os_architecture_list() 
+        p = o.create_phase(f"Configure-Build-Test-Install")
+        for repo in build_repos:
 
-        for config in configs:    
-            config_name = create_context_os_architecture_compiler_generator_string(config)
-            p = o.create_phase(f"{config_name} Configure-Build-Test-Install")
-            for repo in build_repos:
-                workflow_descriptions = get_all_supported_workflow_descriptions(os_arch_generator = config, selected_config = repo["config"])
-                for workflow_description in workflow_descriptions:
-                    workflow_name = workflow_name_from_description(workflow_description)
-                    p.add_step(
-                        StepCMakeWorkflow.create_from_workflow_description(
-                            name = f"{repo['name']} CMake Workflow {workflow_name}",
-                            description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
-                            source_dir=repo["target_directory"],
-                            workflow_description=workflow_description,
-                        ).add_extra(StepExecuteOnMatchingContext())
-                    )
+            p.add_step(
+                StepCMakeWorkflow(
+                    name = f"{repo['name']} CMake Workflow",
+                    description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
+                    source_dir=repo["target_directory"],
+                    config=repo['config'],
+                ).add_extra(StepExecuteOnMatchingContext())
+            )
     return OptionalResultWithReport.createResultAndReport(o, report)
 
 def main(argv: Sequence[str] | None = None) -> int:
