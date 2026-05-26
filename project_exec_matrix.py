@@ -8,9 +8,12 @@ from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrche
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.orchestrator.step_base import StepExecuteOnMatchingContext
-from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, workflow_name_from_description
+from csorchestrator.utils.presets.supported_variants import BuildConfig, get_all_supported_workflow_descriptions, get_supported_context_os_architecture_list, workflow_name_from_description
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
+from csorchestrator.context.context_os_architecture_compiler_generator import (
+    ExecutionMatrixOsArchCompilerGenerator
+)
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -49,11 +52,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     o = Orchestrator ()
 
-    # o.set_execution_matrix(
-    #     ExecutionMatrixOsArchCompilerGenerator(
-    #         configs : list[ContextOsArchitectureCompilerGenerator] = get_supported_context_os_architecture_list()
-    #     )
-    # )
+    o.set_execution_matrix(
+        ExecutionMatrixOsArchCompilerGenerator(
+            configs = get_supported_context_os_architecture_list()
+        )
+    )
 
     p = o.create_phase("Repos Update")
 
