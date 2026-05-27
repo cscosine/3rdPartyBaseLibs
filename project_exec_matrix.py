@@ -7,7 +7,6 @@ from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
 from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.orchestrator.step_base import StepExecuteOnMatchingContext
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
@@ -61,7 +60,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     p = o.create_phase("Repos Update")
 
     skip_get_repository = False
-    skip_build = True
+    skip_build = False
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
@@ -97,7 +96,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                     description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
                     source_dir=repo["target_directory"],
                     config=repo['config'],
-                ).add_extra(StepExecuteOnMatchingContext())
+                )
             )
     return OptionalResultWithReport.createResultAndReport(o, report)
 
