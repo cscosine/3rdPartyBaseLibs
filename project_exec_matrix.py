@@ -5,7 +5,7 @@ from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
-from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
+from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.orchestrator.step_base import StepExecuteOnMatchingContext
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
@@ -54,14 +54,14 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     o.set_execution_matrix(
         ExecutionMatrixOsArchCompilerGenerator(
-            configs = get_supported_context_os_architecture_list()
+            os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
         )
     )
 
     p = o.create_phase("Repos Update")
 
-    skip_get_repository = True
-    skip_build = False
+    skip_get_repository = False
+    skip_build = True
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
@@ -80,6 +80,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                         on_local_checkout=False,
                         on_github_action_checkout=True,
                     )
+                ).add_extra(
+                    StepGetRepositoryExecuteOnlyOncePerMatrix()
                 )
             )
 
