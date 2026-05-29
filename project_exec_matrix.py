@@ -14,6 +14,12 @@ from csorchestrator.context.context_os_architecture_compiler_generator import (
     ExecutionMatrixOsArchCompilerGenerator,
     MatrixSkipExecutionOnNonMatchingContext
 )
+from csorchestrator.ci.github.github_workflow_config import (
+    CreateGitHubWorkflowConfig,
+    Cron,
+    DayOfWeek,
+)
+
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -50,7 +56,16 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         },
     ]
 
-    o = Orchestrator ()
+    o = Orchestrator ("3rdPartyBaseLibs")
+
+    o.create_default_github_workflow(
+        config=CreateGitHubWorkflowConfig(
+            on_push_branches=["main", "dev"],
+            on_push_tags=["'v*.*.*'"],
+            on_pull_request_branches=["main"],
+            on_dispatch=True,
+            on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
+    ))
 
     o.set_execution_matrix(
         ExecutionMatrixOsArchCompilerGenerator(

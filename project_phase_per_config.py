@@ -48,11 +48,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         },
     ]
 
-    o = Orchestrator ()
+    o = Orchestrator ("3rdPartyBaseLibs")
     p = o.create_phase("Repos Update")
 
     skip_get_repository = True
-    skip_build = False
+    skip_build = True
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
