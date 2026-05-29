@@ -56,18 +56,15 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         },
     ]
 
-    o = Orchestrator ("3rdPartyBaseLibs")
-
-    o.create_default_github_workflow(
+    o = Orchestrator ("3rdPartyBaseLibs").create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
             on_push_branches=["main", "dev"],
             on_push_tags=["'v*.*.*'"],
             on_pull_request_branches=["main"],
             on_dispatch=True,
             on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
-    ))
-
-    o.set_execution_matrix(
+        )
+    ).set_execution_matrix(
         ExecutionMatrixOsArchCompilerGenerator(
             os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
         ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
