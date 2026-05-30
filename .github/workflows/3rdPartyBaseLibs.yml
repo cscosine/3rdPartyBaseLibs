@@ -1,0 +1,120 @@
+name: 3rdPartyBaseLibs
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+    tags:
+      - 'v*.*.*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+  schedule:
+    - cron: '0 3 * * 1'
+
+jobs:
+  the_job:
+    runs-on: ${{ matrix.runner }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: linux
+            os_version: ubuntu22.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: gcc
+            compiler_version: default
+            generator: ninja
+            runner: ubuntu-22.04
+          - os: linux
+            os_version: ubuntu22.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: gcc
+            compiler_version: default
+            generator: ninjamulticonfig
+            runner: ubuntu-22.04
+          - os: linux
+            os_version: ubuntu22.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: clang
+            compiler_version: default
+            generator: ninja
+            runner: ubuntu-22.04
+          - os: linux
+            os_version: ubuntu22.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: clang
+            compiler_version: default
+            generator: ninjamulticonfig
+            runner: ubuntu-22.04
+          - os: linux
+            os_version: ubuntu24.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: gcc
+            compiler_version: default
+            generator: ninja
+            runner: ubuntu-24.04
+          - os: linux
+            os_version: ubuntu24.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: gcc
+            compiler_version: default
+            generator: ninjamulticonfig
+            runner: ubuntu-24.04
+          - os: linux
+            os_version: ubuntu24.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: clang
+            compiler_version: default
+            generator: ninja
+            runner: ubuntu-24.04
+          - os: linux
+            os_version: ubuntu24.04
+            architecture: x64
+            architecture_variant: generic
+            compiler: clang
+            compiler_version: default
+            generator: ninjamulticonfig
+            runner: ubuntu-24.04
+          - os: windows
+            os_version: v10
+            architecture: x64
+            architecture_variant: generic
+            compiler: msvc
+            compiler_version: default
+            generator: msvc2022
+            runner: windows-2022
+          - os: windows
+            os_version: v10
+            architecture: x64
+            architecture_variant: generic
+            compiler: msvc
+            compiler_version: default
+            generator: msvc2026
+            runner: windows-2025-vs2026
+          - os: windows
+            os_version: v10
+            architecture: x64
+            architecture_variant: generic
+            compiler: msvcclang
+            compiler_version: default
+            generator: msvc2022
+            runner: windows-2022
+          - os: windows
+            os_version: v10
+            architecture: x64
+            architecture_variant: generic
+            compiler: msvcclang
+            compiler_version: default
+            generator: msvc2026
+            runner: windows-2025-vs2026
