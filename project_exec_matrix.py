@@ -5,7 +5,7 @@ from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
-from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne
+from csorchestrator.step.step_get_repository import StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
@@ -28,7 +28,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "name": "csCMake",
             "description": "The cscosine CMake facilitator",
             "target_directory": "workspace/csCMake",
-            "repo_url": "git@github.com:cscosine/csCMake.git",
         },
     ]
 
@@ -37,21 +36,18 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "name": "eigen3",
             "description": "The cscosine eigen3 library",
             "target_directory": "workspace/eigen3",
-            "repo_url": "git@github.com:cscosine/eigen3.git",
             "config": BuildConfig.RELEASE
         },
         {
             "name": "fmt",
             "description": "The fmt library",
             "target_directory": "workspace/fmt",
-            "repo_url": "git@github.com:cscosine/fmt.git",
             "config": BuildConfig.DEBUG_RELEASE
         },
         {
             "name": "fmt-eigen",
             "description": "The fmt-eigen library",
             "target_directory": "workspace/fmt-eigen",
-            "repo_url": "git@github.com:cscosine/fmt-eigen.git",
             "config": BuildConfig.RELEASE
         },
     ]
@@ -73,19 +69,20 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     p = o.create_phase("Repos Update")
 
     skip_get_repository = False
-    skip_build = False
+    skip_build = True
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
     else:
         for repo in non_build_repos + build_repos:
             p.add_step(
-                StepGetRepository(
-                    repo_type=RepositoryType.GIT,
+                StepGetRepositoryGitHub(
                     name=repo["name"],
                     description=repo["description"],
                     target_directory=repo["target_directory"],
-                    repo_url=repo["repo_url"],
+                    repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
+                    repo_org="cscosine",
+                    repo_name=repo["name"] + ".git",
                     repo_ref="orchestrator",
                 ).add_extra(
                     StepGetRepositoryExtraDepthOne(
@@ -94,6 +91,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                     )
                 ).add_extra(
                     StepGetRepositoryExecuteOnlyOncePerMatrix()
+                ).add_extra(
+                    StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}")
                 )
             )
 

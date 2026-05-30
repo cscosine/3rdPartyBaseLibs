@@ -122,12 +122,36 @@ jobs:
     steps:
       - name: csCMake
         uses: actions/checkout@v6
+        with:
+          repository: cscosine/csCMake
+          path: workspace/csCMake
+          ref: orchestrator
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
       - name: eigen3
         uses: actions/checkout@v6
+        with:
+          repository: cscosine/eigen3
+          path: workspace/eigen3
+          ref: orchestrator
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
       - name: fmt
         uses: actions/checkout@v6
+        with:
+          repository: cscosine/fmt
+          path: workspace/fmt
+          ref: orchestrator
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
       - name: fmt-eigen
         uses: actions/checkout@v6
+        with:
+          repository: cscosine/fmt-eigen
+          path: workspace/fmt-eigen
+          ref: orchestrator
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}

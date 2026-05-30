@@ -5,7 +5,7 @@ from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
-from csorchestrator.step.step_get_repository import StepGetRepository,RepositoryType,StepGetRepositoryExtraDepthOne
+from csorchestrator.step.step_get_repository import StepGetRepositoryGitHub,StepGetRepositoryExtraDepthOne
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.orchestrator.step_base import StepSkipExecutionOnNonMatchingContext
 from csorchestrator.context.context_os_architecture_compiler_generator import create_context_os_architecture_compiler_generator_string
@@ -20,7 +20,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "name": "csCMake",
             "description": "The cscosine CMake facilitator",
             "target_directory": "workspace/csCMake",
-            "repo_url": "git@github.com:cscosine/csCMake.git",
         },
     ]
 
@@ -29,21 +28,18 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "name": "eigen3",
             "description": "The cscosine eigen3 library",
             "target_directory": "workspace/eigen3",
-            "repo_url": "git@github.com:cscosine/eigen3.git",
             "config": BuildConfig.RELEASE
         },
         {
             "name": "fmt",
             "description": "The fmt library",
             "target_directory": "workspace/fmt",
-            "repo_url": "git@github.com:cscosine/fmt.git",
             "config": BuildConfig.DEBUG_RELEASE
         },
         {
             "name": "fmt-eigen",
             "description": "The fmt-eigen library",
             "target_directory": "workspace/fmt-eigen",
-            "repo_url": "git@github.com:cscosine/fmt-eigen.git",
             "config": BuildConfig.RELEASE
         },
     ]
@@ -51,7 +47,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     o = Orchestrator ("3rdPartyBaseLibs")
     p = o.create_phase("Repos Update")
 
-    skip_get_repository = True
+    skip_get_repository = False
     skip_build = True
 
     if skip_get_repository:
@@ -59,12 +55,13 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     else:
         for repo in non_build_repos + build_repos:
             p.add_step(
-                StepGetRepository(
-                    repo_type=RepositoryType.GIT,
+                StepGetRepositoryGitHub(
                     name=repo["name"],
                     description=repo["description"],
                     target_directory=repo["target_directory"],
-                    repo_url=repo["repo_url"],
+                    repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
+                    repo_org="cscosine",
+                    repo_name=repo["name"] + ".git",
                     repo_ref="orchestrator",
                 ).add_extra(
                     StepGetRepositoryExtraDepthOne(
