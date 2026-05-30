@@ -72,8 +72,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     p = o.create_phase("Repos Update")
 
-    skip_get_repository = True
-    skip_build = True
+    skip_get_repository = False
+    skip_build = False
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")

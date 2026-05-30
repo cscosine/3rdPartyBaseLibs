@@ -118,3 +118,16 @@ jobs:
             compiler_version: default
             generator: msvc2026
             runner: windows-2025-vs2026
+
+    steps:
+      - name: csCMake
+        uses: actions/checkout@v6
+
+      - name: eigen3
+        uses: actions/checkout@v6
+
+      - name: fmt
+        uses: actions/checkout@v6
+
+      - name: fmt-eigen
+        uses: actions/checkout@v6
