@@ -5,7 +5,7 @@ from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
 from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
-from csorchestrator.step.step_get_repository import StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
+from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
@@ -80,9 +80,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                     name=repo["name"],
                     description=repo["description"],
                     target_directory=repo["target_directory"],
-                    repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
-                    repo_org="cscosine",
-                    repo_name=repo["name"] + ".git",
+                    repo_url_parts= RepoUrlParts(
+                        repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
+                        repo_org="cscosine",
+                        repo_name=repo["name"] + ".git",                        
+                    ),
                     repo_ref="orchestrator",
                 ).add_extra(
                     StepGetRepositoryExtraDepthOne(
