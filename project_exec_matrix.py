@@ -46,42 +46,42 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "name": "fmt-eigen",
             "config": BuildConfig.RELEASE
         },
-        #{
-        #    "name": "cpptrace",
-        #    "config": BuildConfig.DEBUG_RELEASE
-        #},
-        #{
-        #    "name": "magic_enum",
-        #    "config": BuildConfig.DEBUG_RELEASE
-        #},
-        #{
-        #    "name": "libassert",
-        #    "config": BuildConfig.DEBUG_RELEASE
-        #},
-        #{
-        #    "name": "tclap",
-        #    "config": BuildConfig.RELEASE
-        #},
-        #{
-        #    "name": "Catch2",
-        #    "config": BuildConfig.DEBUG_RELEASE
-        #},
-        #{
-        #    "name": "pipes",
-        #    "config": BuildConfig.RELEASE
-        #},
-        #{
-        #    "name": "NamedType",
-        #    "config": BuildConfig.RELEASE
-        #},
-        #{
-        #    "name": "tl-optional",
-        #    "config": BuildConfig.RELEASE
-        #},
-        #{
-        #    "name": "tl-expected",
-        #    "config": BuildConfig.RELEASE
-        #},
+        {
+            "name": "cpptrace",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "magic_enum",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "libassert",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "tclap",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "Catch2",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "pipes",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "NamedType",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "tl-optional",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "tl-expected",
+            "config": BuildConfig.RELEASE
+        },
     ]
 
     o = Orchestrator ("3rdPartyBaseLibs").create_default_github_workflow(
