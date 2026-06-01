@@ -29,6 +29,7 @@ jobs:
             compiler: gcc
             compiler_version: default
             generator: ninja
+            generator_type: singleconfig
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
@@ -37,6 +38,7 @@ jobs:
             compiler: gcc
             compiler_version: default
             generator: ninjamulticonfig
+            generator_type: multiconfig
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
@@ -45,6 +47,7 @@ jobs:
             compiler: clang
             compiler_version: default
             generator: ninja
+            generator_type: singleconfig
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
@@ -53,6 +56,7 @@ jobs:
             compiler: clang
             compiler_version: default
             generator: ninjamulticonfig
+            generator_type: multiconfig
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu24.04
@@ -61,6 +65,7 @@ jobs:
             compiler: gcc
             compiler_version: default
             generator: ninja
+            generator_type: singleconfig
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
@@ -69,6 +74,7 @@ jobs:
             compiler: gcc
             compiler_version: default
             generator: ninjamulticonfig
+            generator_type: multiconfig
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
@@ -77,6 +83,7 @@ jobs:
             compiler: clang
             compiler_version: default
             generator: ninja
+            generator_type: singleconfig
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
@@ -85,6 +92,7 @@ jobs:
             compiler: clang
             compiler_version: default
             generator: ninjamulticonfig
+            generator_type: multiconfig
             runner: ubuntu-24.04
           - os: windows
             os_version: v10
@@ -93,6 +101,7 @@ jobs:
             compiler: msvc
             compiler_version: default
             generator: msvc2022
+            generator_type: multiconfig
             runner: windows-2022
           - os: windows
             os_version: v10
@@ -101,6 +110,7 @@ jobs:
             compiler: msvc
             compiler_version: default
             generator: msvc2026
+            generator_type: multiconfig
             runner: windows-2025-vs2026
           - os: windows
             os_version: v10
@@ -109,6 +119,7 @@ jobs:
             compiler: msvcclang
             compiler_version: default
             generator: msvc2022
+            generator_type: multiconfig
             runner: windows-2022
           - os: windows
             os_version: v10
@@ -117,13 +128,14 @@ jobs:
             compiler: msvcclang
             compiler_version: default
             generator: msvc2026
+            generator_type: multiconfig
             runner: windows-2025-vs2026
 
     steps:
       - name: csCMake
         uses: actions/checkout@v6
         with:
-          repository: cscosine/csCMake
+          repository: cscosine/csCMake.git
           path: workspace/csCMake
           ref: orchestrator
           fetch-depth: 1
@@ -132,7 +144,7 @@ jobs:
       - name: eigen3
         uses: actions/checkout@v6
         with:
-          repository: cscosine/eigen3
+          repository: cscosine/eigen3.git
           path: workspace/eigen3
           ref: orchestrator
           fetch-depth: 1
@@ -141,7 +153,7 @@ jobs:
       - name: fmt
         uses: actions/checkout@v6
         with:
-          repository: cscosine/fmt
+          repository: cscosine/fmt.git
           path: workspace/fmt
           ref: orchestrator
           fetch-depth: 1
@@ -150,8 +162,57 @@ jobs:
       - name: fmt-eigen
         uses: actions/checkout@v6
         with:
-          repository: cscosine/fmt-eigen
+          repository: cscosine/fmt-eigen.git
           path: workspace/fmt-eigen
           ref: orchestrator
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: cmake workflow on eigen3 CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/eigen3
+
+      - name: cmake workflow on eigen3 CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/eigen3
+
+      - name: cmake workflow on fmt CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt
+
+      - name: cmake workflow on fmt CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/fmt
+
+      - name: cmake workflow on fmt-eigen CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt-eigen
+
+      - name: cmake workflow on fmt-eigen CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt-eigen
