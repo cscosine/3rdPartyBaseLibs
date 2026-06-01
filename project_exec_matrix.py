@@ -23,87 +23,65 @@ from csorchestrator.ci.github.github_workflow_config import (
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
+
+    base_target_dir = "workspace/"
+    common_repo_ref = "dev"
+
     non_build_repos = [
         {
             "name": "csCMake",
-            "description": "The cscosine CMake facilitator",
-            "target_directory": "workspace/csCMake",
         },
     ]
 
     build_repos = [
         {
             "name": "eigen3",
-            "description": "The cscosine eigen3 library",
-            "target_directory": "workspace/eigen3",
             "config": BuildConfig.RELEASE
         },
         {
             "name": "fmt",
-            "description": "The fmt library",
-            "target_directory": "workspace/fmt",
             "config": BuildConfig.DEBUG_RELEASE
         },
         {
             "name": "fmt-eigen",
-            "description": "The fmt-eigen library",
-            "target_directory": "workspace/fmt-eigen",
             "config": BuildConfig.RELEASE
         },
-        {
-            "name": "cpptrace",
-            "description": "The cpptrace library",
-            "target_directory": "workspace/cpptrace",
-            "config": BuildConfig.DEBUG_RELEASE
-        },
-        {
-            "name": "magic_enum",
-            "description": "The magic_enum library",
-            "target_directory": "workspace/magic_enum",
-            "config": BuildConfig.DEBUG_RELEASE
-        },
-        {
-            "name": "libassert",
-            "description": "The libassert library",
-            "target_directory": "workspace/libassert",
-            "config": BuildConfig.DEBUG_RELEASE
-        },
-        {
-            "name": "tclap",
-            "description": "The tclap library",
-            "target_directory": "workspace/tclap",
-            "config": BuildConfig.RELEASE
-        },
-        {
-            "name": "Catch2",
-            "description": "The Catch2 library",
-            "target_directory": "workspace/Catch2",
-            "config": BuildConfig.DEBUG_RELEASE
-        },
-        {
-            "name": "pipes",
-            "description": "The pipes library",
-            "target_directory": "workspace/pipes",
-            "config": BuildConfig.RELEASE
-        },
-        {
-            "name": "NamedType",
-            "description": "The NamedType library",
-            "target_directory": "workspace/NamedType",
-            "config": BuildConfig.RELEASE
-        },
-        {
-            "name": "tl-optional",
-            "description": "The tl-optional library",
-            "target_directory": "workspace/tl-optional",
-            "config": BuildConfig.RELEASE
-        },
-        {
-            "name": "tl-expected",
-            "description": "The tl-expected library",
-            "target_directory": "workspace/tl-expected ",
-            "config": BuildConfig.RELEASE
-        },
+        #{
+        #    "name": "cpptrace",
+        #    "config": BuildConfig.DEBUG_RELEASE
+        #},
+        #{
+        #    "name": "magic_enum",
+        #    "config": BuildConfig.DEBUG_RELEASE
+        #},
+        #{
+        #    "name": "libassert",
+        #    "config": BuildConfig.DEBUG_RELEASE
+        #},
+        #{
+        #    "name": "tclap",
+        #    "config": BuildConfig.RELEASE
+        #},
+        #{
+        #    "name": "Catch2",
+        #    "config": BuildConfig.DEBUG_RELEASE
+        #},
+        #{
+        #    "name": "pipes",
+        #    "config": BuildConfig.RELEASE
+        #},
+        #{
+        #    "name": "NamedType",
+        #    "config": BuildConfig.RELEASE
+        #},
+        #{
+        #    "name": "tl-optional",
+        #    "config": BuildConfig.RELEASE
+        #},
+        #{
+        #    "name": "tl-expected",
+        #    "config": BuildConfig.RELEASE
+        #},
     ]
 
     o = Orchestrator ("3rdPartyBaseLibs").create_default_github_workflow(
@@ -132,14 +110,14 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             p.add_step(
                 StepGetRepositoryGitHub(
                     name=repo["name"],
-                    description=repo["description"],
-                    target_directory=repo["target_directory"],
+                    description=f"Clone or pull-ff {repo["name"]} description",
+                    target_directory=base_target_dir + repo["name"],
                     repo_url_parts= RepoUrlParts(
                         repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
                         repo_org="cscosine",
                         repo_name=repo["name"] + ".git",                        
                     ),
-                    repo_ref="orchestrator",
+                    repo_ref=common_repo_ref,
                 ).add_extra(
                     StepGetRepositoryExtraDepthOne(
                         on_local_checkout=False,
@@ -162,7 +140,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 StepCMakeWorkflow(
                     name = f"{repo['name']} CMake Workflow",
                     description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
-                    source_dir=repo["target_directory"],
+                    source_dir=base_target_dir + repo["name"],
                     config=repo['config'],
                 )
             )

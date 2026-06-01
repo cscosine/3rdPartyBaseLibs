@@ -64,7 +64,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                         repo_org="cscosine",
                         repo_name=repo["name"] + ".git",                        
                     ),
-                    repo_ref="orchestrator",
+                    repo_ref="dev",
                 ).add_extra(
                     StepGetRepositoryExtraDepthOne(
                         on_local_checkout=False,
