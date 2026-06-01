@@ -50,6 +50,60 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "target_directory": "workspace/fmt-eigen",
             "config": BuildConfig.RELEASE
         },
+        {
+            "name": "cpptrace",
+            "description": "The cpptrace library",
+            "target_directory": "workspace/cpptrace",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "magic_enum",
+            "description": "The magic_enum library",
+            "target_directory": "workspace/magic_enum",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "libassert",
+            "description": "The libassert library",
+            "target_directory": "workspace/libassert",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "tclap",
+            "description": "The tclap library",
+            "target_directory": "workspace/tclap",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "Catch2",
+            "description": "The Catch2 library",
+            "target_directory": "workspace/Catch2",
+            "config": BuildConfig.DEBUG_RELEASE
+        },
+        {
+            "name": "pipes",
+            "description": "The pipes library",
+            "target_directory": "workspace/pipes",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "NamedType",
+            "description": "The NamedType library",
+            "target_directory": "workspace/NamedType",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "tl-optional",
+            "description": "The tl-optional library",
+            "target_directory": "workspace/tl-optional",
+            "config": BuildConfig.RELEASE
+        },
+        {
+            "name": "tl-expected",
+            "description": "The tl-expected library",
+            "target_directory": "workspace/tl-expected ",
+            "config": BuildConfig.RELEASE
+        },
     ]
 
     o = Orchestrator ("3rdPartyBaseLibs").create_default_github_workflow(
