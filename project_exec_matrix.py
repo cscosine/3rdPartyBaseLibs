@@ -20,7 +20,7 @@ from csorchestrator.ci.github.github_workflow_config import (
     DayOfWeek,
 )
 from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion, CMakeConfigPackageVersionGrep
-
+from csorchestrator.step.step_create_archives import StepCreateArchives
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -41,14 +41,14 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "config": BuildConfig.RELEASE,
             "version_file": "eigen3/share/eigen3/cmake/Eigen3ConfigVersion.cmake"
         },
-    ]
-
-    other_repos = [
         {
             "name": "fmt",
             "config": BuildConfig.DEBUG_RELEASE,
             "version_file": "fmt/lib/cmake/fmt/fmt-config-version.cmake"
         },
+    ]
+
+    other_repos = [
         {
             "name": "fmt-eigen",
             "config": BuildConfig.RELEASE,
@@ -176,9 +176,21 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             name = "Get Versions",
             description= "Get Versions for all libs",
             repos = repo_config_list,
-            output = "versions"
+            id = "versions",
+            output_dict_name = "packages"
         )
     )
+
+    p.add_step(
+        StepCreateArchives(
+            name = "Create Archives",
+            description= "Create archives with libs and versions",
+            input_id = "versions",
+            input_dict = "packages",
+            base_install_dir = base_install_dir,
+        )
+    )
+
     return OptionalResultWithReport.createResultAndReport(o, report)
 
 def main(argv: Sequence[str] | None = None) -> int:

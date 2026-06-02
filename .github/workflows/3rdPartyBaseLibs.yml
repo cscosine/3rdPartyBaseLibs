@@ -150,6 +150,15 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
+      - name: fmt
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/fmt.git
+          path: workspace/fmt
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
       - name: cmake workflow on eigen3 CMake Workflow - (singleconfig)
         if: matrix.generator_type == 'singleconfig'
         shell: bash
@@ -165,6 +174,23 @@ jobs:
           set -e
           cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
         working-directory: workspace/eigen3
+
+      - name: cmake workflow on fmt CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt
+
+      - name: cmake workflow on fmt CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/fmt
 
       - name: Get Versions
         id: versions
@@ -208,6 +234,7 @@ jobs:
           
           files = {
               "eigen3": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/eigen3/share/eigen3/cmake/Eigen3ConfigVersion.cmake",
+              "fmt": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/fmt/lib/cmake/fmt/fmt-config-version.cmake",
           }
           
           result = []
@@ -221,7 +248,29 @@ jobs:
                 sys.exit(f'ERROR: processing {name} at {filename}: {v_or_err[1]}')
             else:
                 sys.exit('ERROR: unexpected behavior of grep_package_version processing {name} at {filename}')
+          
           output_file = os.environ["GITHUB_OUTPUT"]
-          with open(output_file, "a", encoding="utf-8") as f:
+          with open(output_file, "w", encoding="utf-8") as f:
               f.write(f"packages={json.dumps(result)}")
           
+
+      - name: Create Archives
+        env:
+          VERSIONS: ${{ steps.versions.outputs.packages }}
+        shell: python
+        run: |
+          import json
+          import os
+          import tarfile
+          from pathlib import Path
+          
+          versions = json.loads(os.environ['VERSIONS'])
+          
+          for entry in versions:
+              name = entry['name']
+              version = entry['version']
+              input_path = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}') / Path(name)
+              output_path = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}') / Path(name + '-' + version + '.tar.gz')
+              
+              with tarfile.open(output_path, 'w:gz') as tar:
+                tar.add(input_path)
