@@ -21,6 +21,7 @@ from csorchestrator.ci.github.github_workflow_config import (
 )
 from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion, CMakeConfigPackageVersionGrep
 from csorchestrator.step.step_create_archives import StepCreateArchives
+from csorchestrator.step.step_upload_artifacts import StepUploadArtifacts
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -46,9 +47,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "config": BuildConfig.DEBUG_RELEASE,
             "version_file": "fmt/lib/cmake/fmt/fmt-config-version.cmake"
         },
-    ]
-
-    other_repos = [
         {
             "name": "fmt-eigen",
             "config": BuildConfig.RELEASE,
@@ -57,7 +55,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         {
             "name": "cpptrace",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "cpptrace/lib/cmake/libdwarf/libdwarfConfigVersion.cmake"
+            "version_file": "cpptrace/lib/cmake/cpptrace/cpptrace-config-version.cmake"
         },
         {
             "name": "magic_enum",
@@ -67,7 +65,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         {
             "name": "libassert",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "libassert/lib/cmake/libdwarf/libdwarfConfigVersion.cmake"
+            "version_file": "libassert/lib/cmake/libassert/libassert-config-version.cmake"
         },
         {
             "name": "tclap",
@@ -187,6 +185,14 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             description= "Create archives with libs and versions",
             input_id = "versions",
             input_dict = "packages",
+            base_install_dir = base_install_dir,
+        )
+    )
+
+    p.add_step(
+        StepUploadArtifacts(
+            name = "Upload Artifacts",
+            description= "Upload Artifacts with libs and versions",
             base_install_dir = base_install_dir,
         )
     )

@@ -159,6 +159,96 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
+      - name: fmt-eigen
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/fmt-eigen.git
+          path: workspace/fmt-eigen
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: cpptrace
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/cpptrace.git
+          path: workspace/cpptrace
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: magic_enum
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/magic_enum.git
+          path: workspace/magic_enum
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: libassert
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/libassert.git
+          path: workspace/libassert
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: tclap
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/tclap.git
+          path: workspace/tclap
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: Catch2
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/Catch2.git
+          path: workspace/Catch2
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: pipes
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/pipes.git
+          path: workspace/pipes
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: NamedType
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/NamedType.git
+          path: workspace/NamedType
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: tl-optional
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/tl-optional.git
+          path: workspace/tl-optional
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
+      - name: tl-expected
+        uses: actions/checkout@v6
+        with:
+          repository: cscosine/tl-expected.git
+          path: workspace/tl-expected
+          ref: dev
+          fetch-depth: 1
+          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
+
       - name: cmake workflow on eigen3 CMake Workflow - (singleconfig)
         if: matrix.generator_type == 'singleconfig'
         shell: bash
@@ -192,6 +282,170 @@ jobs:
           cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
         working-directory: workspace/fmt
 
+      - name: cmake workflow on fmt-eigen CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt-eigen
+
+      - name: cmake workflow on fmt-eigen CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/fmt-eigen
+
+      - name: cmake workflow on cpptrace CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/cpptrace
+
+      - name: cmake workflow on cpptrace CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/cpptrace
+
+      - name: cmake workflow on magic_enum CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/magic_enum
+
+      - name: cmake workflow on magic_enum CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/magic_enum
+
+      - name: cmake workflow on libassert CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/libassert
+
+      - name: cmake workflow on libassert CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/libassert
+
+      - name: cmake workflow on tclap CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tclap
+
+      - name: cmake workflow on tclap CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tclap
+
+      - name: cmake workflow on Catch2 CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/Catch2
+
+      - name: cmake workflow on Catch2 CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
+        working-directory: workspace/Catch2
+
+      - name: cmake workflow on pipes CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/pipes
+
+      - name: cmake workflow on pipes CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/pipes
+
+      - name: cmake workflow on NamedType CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/NamedType
+
+      - name: cmake workflow on NamedType CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/NamedType
+
+      - name: cmake workflow on tl-optional CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tl-optional
+
+      - name: cmake workflow on tl-optional CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tl-optional
+
+      - name: cmake workflow on tl-expected CMake Workflow - (singleconfig)
+        if: matrix.generator_type == 'singleconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tl-expected
+
+      - name: cmake workflow on tl-expected CMake Workflow - (multiconfig)
+        if: matrix.generator_type == 'multiconfig'
+        shell: bash
+        run: |
+          set -e
+          cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
+        working-directory: workspace/tl-expected
+
       - name: Get Versions
         id: versions
         shell: python
@@ -202,7 +456,7 @@ jobs:
           import sys
           import os
           
-          def grep_package_version(filename: Path) -> tuple[str | None,str | None]:
+          def grep_package_version(filename: Path) -> tuple[str | None, str | None]:
               path = Path(filename)
           
               if not path.is_file():
@@ -225,9 +479,7 @@ jobs:
                   matches.append(value)
           
               if len(matches) != 1:
-                  return (None, 
-                      f"ERROR: {path}: expected exactly one PACKAGE_VERSION definition, found {len(matches)}"
-                  )
+                  return (None, f"ERROR: {path}: expected exactly one PACKAGE_VERSION definition, found {len(matches)}")
           
               version = matches[0]
               return (version, None)
@@ -235,6 +487,16 @@ jobs:
           files = {
               "eigen3": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/eigen3/share/eigen3/cmake/Eigen3ConfigVersion.cmake",
               "fmt": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/fmt/lib/cmake/fmt/fmt-config-version.cmake",
+              "fmt-eigen": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/fmt-eigen/lib/cmake/fmt-eigen/fmt-eigenConfigVersion.cmake",
+              "cpptrace": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/cpptrace/lib/cmake/cpptrace/cpptrace-config-version.cmake",
+              "magic_enum": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/magic_enum/share/cmake/magic_enum/magic_enumConfigVersion.cmake",
+              "libassert": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/libassert/lib/cmake/libassert/libassert-config-version.cmake",
+              "tclap": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/tclap/lib/cmake/tclap/tclapConfigVersion.cmake",
+              "Catch2": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/Catch2/lib/cmake/Catch2/Catch2ConfigVersion.cmake",
+              "pipes": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/pipes/share/pipes/cmake/pipesConfigVersion.cmake",
+              "NamedType": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/NamedType/share/NamedType/cmake/NamedTypeConfigVersion.cmake",
+              "tl-optional": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/tl-optional/share/cmake/tl-optional/tl-optional-config-version.cmake",
+              "tl-expected": "workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/tl-expected/share/cmake/tl-expected/tl-expected-config-version.cmake",
           }
           
           result = []
@@ -269,8 +531,18 @@ jobs:
           for entry in versions:
               name = entry['name']
               version = entry['version']
-              input_path = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}') / Path(name)
-              output_path = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}') / Path(name + '-' + version + '.tar.gz')
+              install_subdir = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}').resolve()
+              input_path = Path(install_subdir / Path(name)).resolve()
+              output_path = Path(install_subdir / Path(name + '-' + version + '.tar.gz')).resolve()
               
               with tarfile.open(output_path, 'w:gz') as tar:
-                tar.add(input_path)
+                  for path in input_path.rglob('*'):
+                      resolved_path = path.resolve()
+                      arcname = path.resolve().relative_to(install_subdir)
+                      tar.add(resolved_path, arcname=arcname)
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v7
+        with:
+          name: csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}
+          path: workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/*.tar.gz
