@@ -19,12 +19,14 @@ from csorchestrator.ci.github.github_workflow_config import (
     Cron,
     DayOfWeek,
 )
+from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion, CMakeConfigPackageVersionGrep
 
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
 
-    base_target_dir = "workspace/"
+    base_target_dir = Path("workspace")
+    base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
 
     non_build_repos = [
@@ -36,51 +38,66 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     build_repos = [
         {
             "name": "eigen3",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "eigen3/share/eigen3/cmake/Eigen3ConfigVersion.cmake"
         },
+    ]
+
+    other_repos = [
         {
             "name": "fmt",
-            "config": BuildConfig.DEBUG_RELEASE
+            "config": BuildConfig.DEBUG_RELEASE,
+            "version_file": "fmt/lib/cmake/fmt/fmt-config-version.cmake"
         },
         {
             "name": "fmt-eigen",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "fmt-eigen/lib/cmake/fmt-eigen/fmt-eigenConfigVersion.cmake"
         },
         {
             "name": "cpptrace",
-            "config": BuildConfig.DEBUG_RELEASE
+            "config": BuildConfig.DEBUG_RELEASE,
+            "version_file": "cpptrace/lib/cmake/libdwarf/libdwarfConfigVersion.cmake"
         },
         {
             "name": "magic_enum",
-            "config": BuildConfig.DEBUG_RELEASE
+            "config": BuildConfig.DEBUG_RELEASE,
+            "version_file": "magic_enum/share/cmake/magic_enum/magic_enumConfigVersion.cmake"
         },
         {
             "name": "libassert",
-            "config": BuildConfig.DEBUG_RELEASE
+            "config": BuildConfig.DEBUG_RELEASE,
+            "version_file": "libassert/lib/cmake/libdwarf/libdwarfConfigVersion.cmake"
         },
         {
             "name": "tclap",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "tclap/lib/cmake/tclap/tclapConfigVersion.cmake"
         },
         {
             "name": "Catch2",
-            "config": BuildConfig.DEBUG_RELEASE
+            "config": BuildConfig.DEBUG_RELEASE,
+            "version_file": "Catch2/lib/cmake/Catch2/Catch2ConfigVersion.cmake"
         },
         {
             "name": "pipes",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "pipes/share/pipes/cmake/pipesConfigVersion.cmake"
         },
         {
             "name": "NamedType",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "NamedType/share/NamedType/cmake/NamedTypeConfigVersion.cmake"
         },
         {
             "name": "tl-optional",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "tl-optional/share/cmake/tl-optional/tl-optional-config-version.cmake"
         },
         {
             "name": "tl-expected",
-            "config": BuildConfig.RELEASE
+            "config": BuildConfig.RELEASE,
+            "version_file": "tl-expected/share/cmake/tl-expected/tl-expected-config-version.cmake"
         },
     ]
 
@@ -110,8 +127,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             p.add_step(
                 StepGetRepositoryGitHub(
                     name=repo["name"],
-                    description=f"Clone or pull-ff {repo["name"]} description",
-                    target_directory=base_target_dir + repo["name"],
+                    description=f"Clone or pull-ff {repo['name']} description",
+                    target_directory=str(base_target_dir / repo["name"]),
                     repo_url_parts= RepoUrlParts(
                         repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
                         repo_org="cscosine",
@@ -130,20 +147,38 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 )
             )
 
-    if skip_build:
-        report.append_warning("Skipping build steps")
-    else:
-        p = o.create_phase(f"Configure-Build-Test-Install")
-        for repo in build_repos:
+    p = o.create_phase(f"Configure-Build-Test-Install")
+    for repo in build_repos:
 
+        if skip_build:
+            report.append_warning("Skipping build steps")
+        else:
             p.add_step(
                 StepCMakeWorkflow(
                     name = f"{repo['name']} CMake Workflow",
                     description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
-                    source_dir=base_target_dir + repo["name"],
+                    source_dir=str(base_target_dir / repo["name"]),
                     config=repo['config'],
                 )
             )
+
+        repo_config_list = [
+            CMakeConfigPackageVersionGrep(
+                name = repo['name'],
+                version_file = Path(repo['version_file']),
+                base_install_dir = base_install_dir
+            )
+            for repo in build_repos
+        ]
+
+    p.add_step(
+        StepGetVersionsFromCMakeConfigPackageVersion(
+            name = "Get Versions",
+            description= "Get Versions for all libs",
+            repos = repo_config_list,
+            output = "versions"
+        )
+    )
     return OptionalResultWithReport.createResultAndReport(o, report)
 
 def main(argv: Sequence[str] | None = None) -> int:
