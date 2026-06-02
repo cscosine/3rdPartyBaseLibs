@@ -40,62 +40,52 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         {
             "name": "eigen3",
             "config": BuildConfig.RELEASE,
-            "version_file": "eigen3/share/eigen3/cmake/Eigen3ConfigVersion.cmake"
         },
+    # ]
+    # others = [
         {
             "name": "fmt",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "fmt/lib/cmake/fmt/fmt-config-version.cmake"
         },
         {
             "name": "fmt-eigen",
             "config": BuildConfig.RELEASE,
-            "version_file": "fmt-eigen/lib/cmake/fmt-eigen/fmt-eigenConfigVersion.cmake"
         },
         {
             "name": "cpptrace",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "cpptrace/lib/cmake/cpptrace/cpptrace-config-version.cmake"
         },
         {
             "name": "magic_enum",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "magic_enum/share/cmake/magic_enum/magic_enumConfigVersion.cmake"
         },
         {
             "name": "libassert",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "libassert/lib/cmake/libassert/libassert-config-version.cmake"
         },
         {
             "name": "tclap",
             "config": BuildConfig.RELEASE,
-            "version_file": "tclap/lib/cmake/tclap/tclapConfigVersion.cmake"
         },
         {
             "name": "Catch2",
             "config": BuildConfig.DEBUG_RELEASE,
-            "version_file": "Catch2/lib/cmake/Catch2/Catch2ConfigVersion.cmake"
         },
         {
             "name": "pipes",
             "config": BuildConfig.RELEASE,
-            "version_file": "pipes/share/pipes/cmake/pipesConfigVersion.cmake"
         },
         {
             "name": "NamedType",
             "config": BuildConfig.RELEASE,
-            "version_file": "NamedType/share/NamedType/cmake/NamedTypeConfigVersion.cmake"
         },
         {
             "name": "tl-optional",
             "config": BuildConfig.RELEASE,
-            "version_file": "tl-optional/share/cmake/tl-optional/tl-optional-config-version.cmake"
         },
         {
             "name": "tl-expected",
             "config": BuildConfig.RELEASE,
-            "version_file": "tl-expected/share/cmake/tl-expected/tl-expected-config-version.cmake"
         },
     ]
 
@@ -161,19 +151,20 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             )
 
         repo_config_list = [
-            CMakeConfigPackageVersionGrep(
-                name = repo['name'],
-                version_file = Path(repo['version_file']),
-                base_install_dir = base_install_dir
-            )
-            for repo in build_repos
+            # CMakeConfigPackageVersionGrep(
+            #     name = repo['name'],
+            #     version_file = Path(repo['version_file']),
+            # )
+            # for repo in build_repos
         ]
-
+        
     p.add_step(
         StepGetVersionsFromCMakeConfigPackageVersion(
             name = "Get Versions",
             description= "Get Versions for all libs",
-            repos = repo_config_list,
+            repos_config_file_list = repo_config_list,
+            repos_auto_search_list = [repo ['name'] for repo in build_repos],
+            base_install_dir = base_install_dir,
             id = "versions",
             output_dict_name = "packages"
         )
