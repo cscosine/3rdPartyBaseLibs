@@ -61,7 +61,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
     )
 
-    p = o.create_phase("Repos Update")
 
     skip_get_repository = False
     skip_build = False
@@ -69,6 +68,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
     else:
+        p = o.create_phase("Repos Update")
         for repo in repos.keys():
             p.add_step(
                 StepGetRepositoryGitHub(
@@ -111,6 +111,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 )
             )
         
+    p = o.create_phase(f"Create and Upload Artifacts")
     p.add_step(
         StepGetVersionsFromCMakeConfigPackageVersion(
             name = "Get Versions",
