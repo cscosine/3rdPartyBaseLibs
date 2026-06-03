@@ -89,7 +89,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         },
     ]
 
-    o = Orchestrator ("3rdPartyBaseLibs").create_default_github_workflow(
+    o = Orchestrator ("3rdPartyBaseLibs", version="0.1.0").create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
             on_push_branches=["main", "dev"],
             on_push_tags=["'v*.*.*'"],
