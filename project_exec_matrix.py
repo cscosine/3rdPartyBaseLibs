@@ -99,6 +99,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         )
     ).set_execution_matrix(
         ExecutionMatrixOsArchCompilerGenerator(
+            name="orchestrator-matrix",
             os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
         ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
     )
