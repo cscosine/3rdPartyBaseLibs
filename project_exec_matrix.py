@@ -34,8 +34,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     repos : dict[str, None | BuildConfig] = {
             "csCMake": None,
             "eigen3": BuildConfig.RELEASE,
-    }
-    others: dict[str, BuildConfig] = {
+    # }
+    # others: dict[str, BuildConfig] = {
             "fmt":BuildConfig.DEBUG_RELEASE,
             "fmt-eigen": BuildConfig.RELEASE,
             "cpptrace": BuildConfig.DEBUG_RELEASE,
