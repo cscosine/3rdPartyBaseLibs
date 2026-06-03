@@ -30,64 +30,21 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
 
-    non_build_repos = [
-        {
-            "name": "csCMake",
-        },
-    ]
-
-    build_repos = [
-        {
-            "name": "eigen3",
-            "config": BuildConfig.RELEASE,
-        },
-    # ]
-    # others = [
-        {
-            "name": "fmt",
-            "config": BuildConfig.DEBUG_RELEASE,
-        },
-        {
-            "name": "fmt-eigen",
-            "config": BuildConfig.RELEASE,
-        },
-        {
-            "name": "cpptrace",
-            "config": BuildConfig.DEBUG_RELEASE,
-        },
-        {
-            "name": "magic_enum",
-            "config": BuildConfig.DEBUG_RELEASE,
-        },
-        {
-            "name": "libassert",
-            "config": BuildConfig.DEBUG_RELEASE,
-        },
-        {
-            "name": "tclap",
-            "config": BuildConfig.RELEASE,
-        },
-        {
-            "name": "Catch2",
-            "config": BuildConfig.DEBUG_RELEASE,
-        },
-        {
-            "name": "pipes",
-            "config": BuildConfig.RELEASE,
-        },
-        {
-            "name": "NamedType",
-            "config": BuildConfig.RELEASE,
-        },
-        {
-            "name": "tl-optional",
-            "config": BuildConfig.RELEASE,
-        },
-        {
-            "name": "tl-expected",
-            "config": BuildConfig.RELEASE,
-        },
-    ]
+    repos : dict[str, None | BuildConfig] = {
+            "csCMake": None,
+            "eigen3": BuildConfig.RELEASE,
+            "fmt":BuildConfig.DEBUG_RELEASE,
+            "fmt-eigen": BuildConfig.RELEASE,
+            "cpptrace": BuildConfig.DEBUG_RELEASE,
+            "magic_enum": BuildConfig.DEBUG_RELEASE,
+            "libassert": BuildConfig.DEBUG_RELEASE,
+            "tclap": BuildConfig.RELEASE,
+            "Catch2": BuildConfig.DEBUG_RELEASE,
+            "pipes": BuildConfig.RELEASE,
+            "NamedType": BuildConfig.RELEASE,
+            "tl-optional": BuildConfig.RELEASE,
+            "tl-expected": BuildConfig.RELEASE,
+    }
 
     o = Orchestrator ("3rdPartyBaseLibs", version="0.1.0").create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
@@ -112,16 +69,16 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
     else:
-        for repo in non_build_repos + build_repos:
+        for repo in repos.keys():
             p.add_step(
                 StepGetRepositoryGitHub(
-                    name=repo["name"],
-                    description=f"Clone or pull-ff {repo['name']} description",
-                    target_directory=str(base_target_dir / repo["name"]),
+                    name=repo,
+                    description=f"Clone or pull-ff {repo} description",
+                    target_directory=str(base_target_dir / repo),
                     repo_url_parts= RepoUrlParts(
                         repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
                         repo_org="cscosine",
-                        repo_name=repo["name"] + ".git",                        
+                        repo_name=repo + ".git",                        
                     ),
                     repo_ref=common_repo_ref,
                 ).add_extra(
@@ -137,34 +94,28 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             )
 
     p = o.create_phase(f"Configure-Build-Test-Install")
-    for repo in build_repos:
+    for repo, config in repos.items():
 
         if skip_build:
             report.append_warning("Skipping build steps")
         else:
+            if config is None:
+                report.append_info(f"Skipping build steps for {repo} since config is None")
+                continue
             p.add_step(
                 StepCMakeWorkflow(
-                    name = f"{repo['name']} CMake Workflow",
-                    description=f"CMake workflow for {repo['name']} with config: {repo['config']}",
-                    source_dir=str(base_target_dir / repo["name"]),
-                    config=repo['config'],
+                    name = f"{repo} CMake Workflow",
+                    description=f"CMake workflow for {repo} with config: {config}",
+                    source_dir=str(base_target_dir / repo),
+                    config=config,
                 )
             )
-
-        repo_config_list = [
-            # CMakeConfigPackageVersionGrep(
-            #     name = repo['name'],
-            #     version_file = Path(repo['version_file']),
-            # )
-            # for repo in build_repos
-        ]
         
     p.add_step(
         StepGetVersionsFromCMakeConfigPackageVersion(
             name = "Get Versions",
             description= "Get Versions for all libs",
-            repos_config_file_list = repo_config_list,
-            repos_auto_search_list = [repo ['name'] for repo in build_repos],
+            repos_auto_search_list = [repo for repo, config in repos.items() if config is not None],
             base_install_dir = base_install_dir,
             id = "versions",
             output_dict_name = "packages"
