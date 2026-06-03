@@ -18,6 +18,7 @@ from csorchestrator.ci.github.github_workflow_config import (
     CreateGitHubWorkflowConfig,
     Cron,
     DayOfWeek,
+    JobReleaseCreationFromArifacts,
 )
 from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion, CMakeConfigPackageVersionGrep
 from csorchestrator.step.step_create_archives import StepCreateArchives
@@ -33,6 +34,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     repos : dict[str, None | BuildConfig] = {
             "csCMake": None,
             "eigen3": BuildConfig.RELEASE,
+    }
+    others: dict[str, BuildConfig] = {
             "fmt":BuildConfig.DEBUG_RELEASE,
             "fmt-eigen": BuildConfig.RELEASE,
             "cpptrace": BuildConfig.DEBUG_RELEASE,
@@ -59,6 +62,16 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             name="orchestrator-matrix",
             os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
         ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
+    )
+
+    o.default_github_wf.on_job(
+        job=
+        JobReleaseCreationFromArifacts(
+            name="release-from-artifacts",
+            needs="orchestrator-matrix",
+            runs_on="ubuntu-latest",
+            if_str="${{ github.ref_type == 'tag' }}"
+        )
     )
 
 
