@@ -47,7 +47,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     o = create_orchestrator_factory("3rdPartyBaseLibs", version="0.1.0", execution_matrix_name = "orchestrator-matrix")
 
-    o.execution_matrix.os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
+    o.set_execution_matrix_list(get_supported_context_os_architecture_list())
     
     o.create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
