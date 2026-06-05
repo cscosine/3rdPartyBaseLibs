@@ -4,16 +4,12 @@ from pathlib import Path
 from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
+from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory
 from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
-from csorchestrator.context.context_os_architecture_compiler_generator import (
-    ExecutionMatrixOsArchCompilerGenerator,
-    MatrixSkipExecutionOnNonMatchingContext
-)
 from csorchestrator.ci.github.github_workflow_config import (
     CreateGitHubWorkflowConfig,
     Cron,
@@ -49,7 +45,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "tl-expected": BuildConfig.RELEASE,
     }
 
-    o = Orchestrator ("3rdPartyBaseLibs", version="0.1.0").create_default_github_workflow(
+    o = create_orchestrator_factory("3rdPartyBaseLibs", version="0.1.0", execution_matrix_name = "orchestrator-matrix")
+
+    o.execution_matrix.os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
+    
+    o.create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
             on_push_branches=["main", "dev"],
             on_push_tags=["'v*.*.*'"],
@@ -57,12 +57,9 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             on_dispatch=True,
             on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
         )
-    ).set_execution_matrix(
-        ExecutionMatrixOsArchCompilerGenerator(
-            name="orchestrator-matrix",
-            os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
-        ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
     )
+            
+    
 
     o.default_github_wf.on_job(
         job=
