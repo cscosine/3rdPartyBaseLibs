@@ -4,10 +4,10 @@ from pathlib import Path
 from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory
+from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
 from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
+from csorchestrator.utils.presets.supported_variants import BuildConfig
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
 from csorchestrator.ci.github.github_workflow_config import (
@@ -45,9 +45,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "tl-expected": BuildConfig.RELEASE,
     }
 
-    o = create_orchestrator_factory("3rdPartyBaseLibs", version="0.1.0", execution_matrix_name = "orchestrator-matrix")
-
-    o.set_execution_matrix_list(get_supported_context_os_architecture_list())
+    o = create_orchestrator_factory_all_supported_cases("3rdPartyBaseLibs", version="0.1.0", execution_matrix_name = "orchestrator-matrix")
     
     o.create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
