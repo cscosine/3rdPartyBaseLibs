@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.step_base import StepExecuteOnlyOncePerMatrix
+from csorchestrator.orchestrator.step_base import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
 from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
 from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
@@ -143,7 +143,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 input_id = "versions",
                 input_dict = "packages",
                 base_install_dir = base_install_dir,
-            )
+            ).add_extra(StepSkipExecutionOnLocal())
         )
 
         p.add_step(
@@ -151,7 +151,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 name = "Upload Artifacts",
                 description= "Upload Artifacts with libs and versions",
                 base_install_dir = base_install_dir,
-            )
+            ).add_extra(StepSkipExecutionOnLocal())
         )
 
     return OptionalResultWithReport.createResultAndReport(o, report)
