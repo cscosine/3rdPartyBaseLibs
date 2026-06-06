@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.step_base import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
+from csorchestrator.step.step_utils import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
 from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
 from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
