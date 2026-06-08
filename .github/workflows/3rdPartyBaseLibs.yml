@@ -51,72 +51,96 @@ jobs:
             architecture: x64
             architecture_variant: generic
             compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
             compiler_version: default
             generator: ninja
             generator_type: singleconfig
+            generator_cmake: Ninja
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
             compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
             compiler_version: default
             generator: ninjamulticonfig
             generator_type: multiconfig
+            generator_cmake: Ninja Multi-Config
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
             compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
             compiler_version: default
             generator: ninja
             generator_type: singleconfig
+            generator_cmake: Ninja
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
             compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
             compiler_version: default
             generator: ninjamulticonfig
             generator_type: multiconfig
+            generator_cmake: Ninja Multi-Config
             runner: ubuntu-22.04
           - os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
             compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
             compiler_version: default
             generator: ninja
             generator_type: singleconfig
+            generator_cmake: Ninja
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
             compiler: gcc
+            c_compiler: gcc
+            cpp_compiler: g++
             compiler_version: default
             generator: ninjamulticonfig
             generator_type: multiconfig
+            generator_cmake: Ninja Multi-Config
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
             compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
             compiler_version: default
             generator: ninja
             generator_type: singleconfig
+            generator_cmake: Ninja
             runner: ubuntu-24.04
           - os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
             compiler: clang
+            c_compiler: clang
+            cpp_compiler: clang++
             compiler_version: default
             generator: ninjamulticonfig
             generator_type: multiconfig
+            generator_cmake: Ninja Multi-Config
             runner: ubuntu-24.04
           - os: windows
             os_version: v10
@@ -126,6 +150,7 @@ jobs:
             compiler_version: default
             generator: msvc2022
             generator_type: multiconfig
+            generator_cmake: Visual Studio 17 2022
             runner: windows-2022
           - os: windows
             os_version: v10
@@ -135,6 +160,7 @@ jobs:
             compiler_version: default
             generator: msvc2026
             generator_type: multiconfig
+            generator_cmake: Visual Studio 18 2026
             runner: windows-2025-vs2026
           - os: windows
             os_version: v10
@@ -144,6 +170,7 @@ jobs:
             compiler_version: default
             generator: msvc2022
             generator_type: multiconfig
+            generator_cmake: Visual Studio 17 2022
             runner: windows-2022
           - os: windows
             os_version: v10
@@ -153,6 +180,7 @@ jobs:
             compiler_version: default
             generator: msvc2026
             generator_type: multiconfig
+            generator_cmake: Visual Studio 18 2026
             runner: windows-2025-vs2026
 
     steps:
@@ -277,9 +305,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -291,10 +319,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -306,9 +334,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -320,10 +348,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -335,10 +363,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -350,10 +378,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -365,9 +393,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -379,10 +407,10 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -394,9 +422,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -408,9 +436,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -422,9 +450,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
@@ -436,9 +464,9 @@ jobs:
         shell: bash
         run: |
           set -e
-          if [[ "${{matrix.generator_type}}" == "singleconfig" ]]; then
+          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{matrix.generator_type}}" == "multiconfig" ]]; then
+          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
             cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
           else
             echo "Unknown generator_type: ${{ matrix.generator_type }}"
