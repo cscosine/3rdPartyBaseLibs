@@ -167,6 +167,7 @@ jobs:
             architecture: x64
             architecture_variant: generic
             compiler: msvcclang
+            toolset: ClangCL
             compiler_version: default
             generator: msvc2022
             generator_type: multiconfig
@@ -177,6 +178,7 @@ jobs:
             architecture: x64
             architecture_variant: generic
             compiler: msvcclang
+            toolset: ClangCL
             compiler_version: default
             generator: msvc2026
             generator_type: multiconfig
