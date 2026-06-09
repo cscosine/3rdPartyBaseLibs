@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
-# assume you have already csCMake, which in turns activate the csOrchestrator venv
+# assume you have csOrchestrator on parent folder
 # TODO remove when pip available for csOrchestrator
-source workspace/csCMake/.venv/bin/activate
+source ../csOrchestrator/.venv/bin/activate
 
 code .

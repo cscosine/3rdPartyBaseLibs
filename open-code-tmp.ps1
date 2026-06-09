@@ -1,7 +1,7 @@
 $ErrorActionPreference = "Stop"
 
-# assume you have already cscmake in worksace
+# assume you have csOrchestrator on parent folder
 # TODO remove when pip available for csOrchestrator
-workspace\csCMake\.venv\Scripts\Activate.ps1
+..\csOrchestrator\.venv\Scripts\Activate.ps1
 
 code .
