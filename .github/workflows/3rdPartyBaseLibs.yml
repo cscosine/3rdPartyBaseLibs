@@ -46,7 +46,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: linux
+          - execution_id: 0
+            os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
@@ -58,7 +59,8 @@ jobs:
             generator_type: singleconfig
             generator_cmake: Ninja
             runner: ubuntu-22.04
-          - os: linux
+          - execution_id: 1
+            os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
@@ -70,7 +72,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Ninja Multi-Config
             runner: ubuntu-22.04
-          - os: linux
+          - execution_id: 2
+            os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
@@ -82,7 +85,8 @@ jobs:
             generator_type: singleconfig
             generator_cmake: Ninja
             runner: ubuntu-22.04
-          - os: linux
+          - execution_id: 3
+            os: linux
             os_version: ubuntu22.04
             architecture: x64
             architecture_variant: generic
@@ -94,7 +98,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Ninja Multi-Config
             runner: ubuntu-22.04
-          - os: linux
+          - execution_id: 4
+            os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
@@ -106,7 +111,8 @@ jobs:
             generator_type: singleconfig
             generator_cmake: Ninja
             runner: ubuntu-24.04
-          - os: linux
+          - execution_id: 5
+            os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
@@ -118,7 +124,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Ninja Multi-Config
             runner: ubuntu-24.04
-          - os: linux
+          - execution_id: 6
+            os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
@@ -130,7 +137,8 @@ jobs:
             generator_type: singleconfig
             generator_cmake: Ninja
             runner: ubuntu-24.04
-          - os: linux
+          - execution_id: 7
+            os: linux
             os_version: ubuntu24.04
             architecture: x64
             architecture_variant: generic
@@ -142,7 +150,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Ninja Multi-Config
             runner: ubuntu-24.04
-          - os: windows
+          - execution_id: 8
+            os: windows
             os_version: v10
             architecture: x64
             architecture_variant: generic
@@ -152,7 +161,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Visual Studio 17 2022
             runner: windows-2022
-          - os: windows
+          - execution_id: 9
+            os: windows
             os_version: v10
             architecture: x64
             architecture_variant: generic
@@ -162,7 +172,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Visual Studio 18 2026
             runner: windows-2025-vs2026
-          - os: windows
+          - execution_id: 10
+            os: windows
             os_version: v10
             architecture: x64
             architecture_variant: generic
@@ -173,7 +184,8 @@ jobs:
             generator_type: multiconfig
             generator_cmake: Visual Studio 17 2022
             runner: windows-2022
-          - os: windows
+          - execution_id: 11
+            os: windows
             os_version: v10
             architecture: x64
             architecture_variant: generic
