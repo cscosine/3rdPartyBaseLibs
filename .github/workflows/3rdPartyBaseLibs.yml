@@ -581,9 +581,9 @@ jobs:
                 version = v_or_err[0]
                 result.append({'name': name,'version': version})
               elif v_or_err[1] is not None:
-                sys.exit(f'ERROR: processing {name} at {filename}: {v_or_err[1]}')
+                sys.exit(f'ERROR: processing {name} at {path}: {v_or_err[1]}')
               else:
-                sys.exit('ERROR: unexpected behavior of grep_package_version processing {name} at {filename}')
+                sys.exit('ERROR: unexpected behavior of grep_package_version processing {name} at {path}')
             elif path_or_err[1] is not None:
                 sys.exit(f'ERROR: processing {name} : {path_or_err[1]}')
             else:
@@ -592,7 +592,7 @@ jobs:
           
           output_file = os.environ["GITHUB_OUTPUT"]
           with open(output_file, "w", encoding="utf-8") as f:
-              f.write(f"packages={json.dumps(result)}")
+              f.write(f"packages={json.dumps(result)}\n")
           
 
       - name: Create Archives
