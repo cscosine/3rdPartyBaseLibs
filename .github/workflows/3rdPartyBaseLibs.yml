@@ -546,6 +546,8 @@ jobs:
           }
           
           result = []
+          
+          
           for name, filename in files.items():
             v_or_err = grep_package_version(filename=filename)
             if v_or_err[0] is not None:
