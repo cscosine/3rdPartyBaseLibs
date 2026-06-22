@@ -4,16 +4,13 @@ from pathlib import Path
 from typing import Sequence, TypeAlias
 
 from csorchestrator.core.report import Report
-from csorchestrator.orchestrator.orchestrator import Orchestrator, OptionalOrchestratorWithReport
-from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExecuteOnlyOncePerMatrix,StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
+from csorchestrator.step.step_utils import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
+from csorchestrator.orchestrator.orchestrator import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
+from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.utils.presets.supported_variants import BuildConfig, get_supported_context_os_architecture_list
+from csorchestrator.utils.presets.supported_variants import BuildConfig
 from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
-from csorchestrator.context.context_os_architecture_compiler_generator import (
-    ExecutionMatrixOsArchCompilerGenerator,
-    MatrixSkipExecutionOnNonMatchingContext
-)
 from csorchestrator.ci.github.github_workflow_config import (
     CreateGitHubWorkflowConfig,
     Cron,
@@ -49,7 +46,9 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             "tl-expected": BuildConfig.RELEASE,
     }
 
-    o = Orchestrator ("3rdPartyBaseLibs", version="0.1.0").create_default_github_workflow(
+    o = create_orchestrator_factory_all_supported_cases("3rdPartyBaseLibs", version="0.1.0", execution_matrix_name = "orchestrator-matrix")
+    
+    o.create_default_github_workflow(
         config=CreateGitHubWorkflowConfig(
             on_push_branches=["main", "dev"],
             on_push_tags=["'v*.*.*'"],
@@ -57,12 +56,9 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             on_dispatch=True,
             on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
         )
-    ).set_execution_matrix(
-        ExecutionMatrixOsArchCompilerGenerator(
-            name="orchestrator-matrix",
-            os_architecture_compiler_generator_list = get_supported_context_os_architecture_list()
-        ).add_extra(MatrixSkipExecutionOnNonMatchingContext())
     )
+            
+    
 
     o.default_github_wf.on_job(
         job=
@@ -77,6 +73,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     skip_get_repository = False
     skip_build = False
+    skip_upload_artifacts = False
 
     if skip_get_repository:
         report.append_warning("Skipping repository cloning steps")
@@ -87,7 +84,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 StepGetRepositoryGitHub(
                     name=repo,
                     description=f"Clone or pull-ff {repo} description",
-                    target_directory=str(base_target_dir / repo),
+                    target_directory=(base_target_dir / repo).as_posix(),
                     repo_url_parts= RepoUrlParts(
                         repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
                         repo_org="cscosine",
@@ -100,7 +97,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                         on_github_action_checkout=True,
                     )
                 ).add_extra(
-                    StepGetRepositoryExecuteOnlyOncePerMatrix()
+                    StepExecuteOnlyOncePerMatrix()
                 ).add_extra(
                     StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}")
                 )
@@ -119,40 +116,43 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 StepCMakeWorkflow(
                     name = f"{repo} CMake Workflow",
                     description=f"CMake workflow for {repo} with config: {config}",
-                    source_dir=str(base_target_dir / repo),
+                    source_dir=(base_target_dir / repo).as_posix(),
                     config=config,
                 )
             )
-        
-    p = o.create_phase(f"Create and Upload Artifacts")
-    p.add_step(
-        StepGetVersionsFromCMakeConfigPackageVersion(
-            name = "Get Versions",
-            description= "Get Versions for all libs",
-            repos_auto_search_list = [repo for repo, config in repos.items() if config is not None],
-            base_install_dir = base_install_dir,
-            id = "versions",
-            output_dict_name = "packages"
+    
+    if  skip_upload_artifacts:
+        report.append_warning("Skipping upload artifacts steps")
+    else:
+        p = o.create_phase(f"Create and Upload Artifacts")
+        p.add_step(
+            StepGetVersionsFromCMakeConfigPackageVersion(
+                name = "Get Versions",
+                description= "Get Versions for all libs",
+                repos_auto_search_list = [repo for repo, config in repos.items() if config is not None],
+                base_install_dir = base_install_dir,
+                id = "versions",
+                output_dict_name = "packages"
+            )
         )
-    )
 
-    p.add_step(
-        StepCreateArchives(
-            name = "Create Archives",
-            description= "Create archives with libs and versions",
-            input_id = "versions",
-            input_dict = "packages",
-            base_install_dir = base_install_dir,
+        p.add_step(
+            StepCreateArchives(
+                name = "Create Archives",
+                description= "Create archives with libs and versions",
+                input_id = "versions",
+                input_dict = "packages",
+                base_install_dir = base_install_dir,
+            ).add_extra(StepSkipExecutionOnLocal())
         )
-    )
 
-    p.add_step(
-        StepUploadArtifacts(
-            name = "Upload Artifacts",
-            description= "Upload Artifacts with libs and versions",
-            base_install_dir = base_install_dir,
+        p.add_step(
+            StepUploadArtifacts(
+                name = "Upload Artifacts",
+                description= "Upload Artifacts with libs and versions",
+                base_install_dir = base_install_dir,
+            ).add_extra(StepSkipExecutionOnLocal())
         )
-    )
 
     return OptionalResultWithReport.createResultAndReport(o, report)
 

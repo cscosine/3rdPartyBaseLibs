@@ -1,7 +1,7 @@
-#!/usr/bin/env bash
+$ErrorActionPreference = "Stop"
 
 # assume you have csOrchestrator on parent folder
 # TODO remove when pip available for csOrchestrator
-source ../csOrchestrator/.venv/bin/activate
+..\csOrchestrator\.venv\Scripts\Activate.ps1
 
 code .
