@@ -19,7 +19,7 @@ from csorchestrator.utils.presets.supported_variants import BuildConfig
 from csorchestrator.orchestrator.workflow_config import WorkflowConfig, Cron, DayOfWeek, ReleaseCreationOnTagConfig
 
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
-from csorchestrator.cli.factory  import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
+from csorchestrator.execution.factory  import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
 
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
