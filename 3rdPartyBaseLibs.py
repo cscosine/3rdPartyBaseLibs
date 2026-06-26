@@ -66,7 +66,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     for repo in repos.keys():
         p.add_step(
             StepGetRepositoryGitHub(
-                name=repo,
+                name=f"{repo} Git clone/pull-ff",
                 description=f"Clone or pull-ff {repo} description",
                 target_directory=(base_target_dir / repo).as_posix(),
                 repo_url_parts= RepoUrlParts(
@@ -129,7 +129,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             description= "Upload Artifacts with libs and versions",
             base_install_dir = base_install_dir,
             artifact_prefix = create_artifact_prefix_from_orchestrator_name_version(o)
-        ).add_extra(StepSkipExecutionOnLocal())
+        )
     )
 
     return OptionalResultWithReport.createResultAndReport(o, report)
