@@ -5,22 +5,27 @@ from typing import Sequence
 
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.foundation.core.optional_result_with_report import OptionalResultWithReport
-
-
-from csorchestrator.context.step_utils import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
-from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
-from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion
-from csorchestrator.step.step_create_archives import StepCreateArchives
-from csorchestrator.step.step_upload_artifacts import StepUploadArtifacts, create_artifact_prefix_from_orchestrator_name_version
-
-from csorchestrator.utils.presets.supported_variants import BuildConfig
+from csorchestrator.foundation.git.resolve_url import RepoUrlParts
 
 from csorchestrator.domain.orchestrator.workflow_config import WorkflowConfig, Cron, DayOfWeek, ReleaseCreationOnTagConfig
 
-from csorchestrator.cli.cli import orchestrator_main_with_default_run
-from csorchestrator.execution.factory  import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
+from csorchestrator.frontend.cscmake_presets.supported_variants import (
+    BuildConfig,
+)
 
+from csorchestrator.frontend.step.step_get_repository import StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,  StepGetRepositoryExtraAccessToken
+from csorchestrator.frontend.step.step_cmake_command import StepCMakeWorkflow
+from csorchestrator.frontend.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion
+from csorchestrator.frontend.step.step_create_archives import StepCreateArchives
+from csorchestrator.frontend.step.step_upload_artifacts import StepUploadArtifacts, create_artifact_prefix_from_orchestrator_name_version
+
+from csorchestrator.frontend.local_execution.step_utils import (
+    StepExecuteOnlyOncePerMatrix,
+    StepSkipExecutionOnLocal,
+)
+
+from csorchestrator.application.factory.factory import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
+from csorchestrator.application.cli.cli import orchestrator_main_with_default_run
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -88,7 +93,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         )
 
     # ----------------------------------------------------------------
-    p = o.create_phase(f"Configure-Build-Test-Install")
+    p = o.create_phase("Configure-Build-Test-Install")
     for repo, config in repos.items():
         if config is not None:
             p.add_step(
@@ -101,7 +106,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             )
     
     # ----------------------------------------------------------------
-    p = o.create_phase(f"Create and Upload Artifacts")
+    p = o.create_phase("Create and Upload Artifacts")
     p.add_step(
         StepGetVersionsFromCMakeConfigPackageVersion(
             name = "Get Versions",
