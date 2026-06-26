@@ -3,11 +3,11 @@ import sys
 from pathlib import Path
 from typing import Sequence
 
-from csorchestrator.core.report import Report
-from csorchestrator.core.optional_result_with_report import OptionalResultWithReport
+from csorchestrator.foundation.core.report import Report
+from csorchestrator.foundation.core.optional_result_with_report import OptionalResultWithReport
 
 
-from csorchestrator.step.step_utils import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
+from csorchestrator.context.step_utils import StepExecuteOnlyOncePerMatrix, StepSkipExecutionOnLocal
 from csorchestrator.step.step_get_repository import RepoUrlParts, StepGetRepositoryGitHub, StepGetRepositoryExtraDepthOne,StepGetRepositoryExtraAccessToken
 from csorchestrator.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.step.step_get_versions_from_cmake_config_package_version import StepGetVersionsFromCMakeConfigPackageVersion
@@ -16,7 +16,7 @@ from csorchestrator.step.step_upload_artifacts import StepUploadArtifacts, creat
 
 from csorchestrator.utils.presets.supported_variants import BuildConfig
 
-from csorchestrator.orchestrator.workflow_config import WorkflowConfig, Cron, DayOfWeek, ReleaseCreationOnTagConfig
+from csorchestrator.domain.orchestrator.workflow_config import WorkflowConfig, Cron, DayOfWeek, ReleaseCreationOnTagConfig
 
 from csorchestrator.cli.cli import orchestrator_main_with_default_run
 from csorchestrator.execution.factory  import OptionalOrchestratorWithReport, create_orchestrator_factory_all_supported_cases
