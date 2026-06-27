@@ -198,7 +198,7 @@ jobs:
             runner: windows-2025-vs2026
 
     steps:
-      - name: csCMake
+      - name: csCMake Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/csCMake.git
@@ -207,7 +207,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: eigen3
+      - name: eigen3 Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/eigen3.git
@@ -216,7 +216,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: fmt
+      - name: fmt Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/fmt.git
@@ -225,7 +225,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: fmt-eigen
+      - name: fmt-eigen Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/fmt-eigen.git
@@ -234,7 +234,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: cpptrace
+      - name: cpptrace Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/cpptrace.git
@@ -243,7 +243,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: magic_enum
+      - name: magic_enum Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/magic_enum.git
@@ -252,7 +252,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: libassert
+      - name: libassert Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/libassert.git
@@ -261,7 +261,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: tclap
+      - name: tclap Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/tclap.git
@@ -270,7 +270,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: Catch2
+      - name: Catch2 Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/Catch2.git
@@ -279,7 +279,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: pipes
+      - name: pipes Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/pipes.git
@@ -288,7 +288,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: NamedType
+      - name: NamedType Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/NamedType.git
@@ -297,7 +297,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: tl-optional
+      - name: tl-optional Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/tl-optional.git
@@ -306,7 +306,7 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: tl-expected
+      - name: tl-expected Git clone/pull-ff
         uses: actions/checkout@v6
         with:
           repository: cscosine/tl-expected.git
