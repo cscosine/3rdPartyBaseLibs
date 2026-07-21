@@ -216,105 +216,6 @@ jobs:
           fetch-depth: 1
           token: ${{ secrets.ACTIONS_ORG_ACCESS }}
 
-      - name: fmt Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/fmt.git
-          path: workspace/fmt
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: fmt-eigen Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/fmt-eigen.git
-          path: workspace/fmt-eigen
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: cpptrace Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/cpptrace.git
-          path: workspace/cpptrace
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: magic_enum Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/magic_enum.git
-          path: workspace/magic_enum
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: libassert Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/libassert.git
-          path: workspace/libassert
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: tclap Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/tclap.git
-          path: workspace/tclap
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: Catch2 Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/Catch2.git
-          path: workspace/Catch2
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: pipes Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/pipes.git
-          path: workspace/pipes
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: NamedType Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/NamedType.git
-          path: workspace/NamedType
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: tl-optional Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/tl-optional.git
-          path: workspace/tl-optional
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
-      - name: tl-expected Git clone/pull-ff
-        uses: actions/checkout@v6
-        with:
-          repository: cscosine/tl-expected.git
-          path: workspace/tl-expected
-          ref: dev
-          fetch-depth: 1
-          token: ${{ secrets.ACTIONS_ORG_ACCESS }}
-
       - name: cmake workflow on eigen3 CMake Workflow for config(s) release
         shell: bash
         run: |
@@ -329,165 +230,6 @@ jobs:
           fi
         working-directory: workspace/eigen3
 
-      - name: cmake workflow on fmt CMake Workflow for config(s) debug-release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/fmt
-
-      - name: cmake workflow on fmt-eigen CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/fmt-eigen
-
-      - name: cmake workflow on cpptrace CMake Workflow for config(s) debug-release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/cpptrace
-
-      - name: cmake workflow on magic_enum CMake Workflow for config(s) debug-release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/magic_enum
-
-      - name: cmake workflow on libassert CMake Workflow for config(s) debug-release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/libassert
-
-      - name: cmake workflow on tclap CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/tclap
-
-      - name: cmake workflow on Catch2 CMake Workflow for config(s) debug-release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-debug-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/Catch2
-
-      - name: cmake workflow on pipes CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/pipes
-
-      - name: cmake workflow on NamedType CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/NamedType
-
-      - name: cmake workflow on tl-optional CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/tl-optional
-
-      - name: cmake workflow on tl-expected CMake Workflow for config(s) release
-        shell: bash
-        run: |
-          set -e
-          if [[ "${{ matrix.generator_type }}" == "singleconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          elif [[ "${{ matrix.generator_type }}" == "multiconfig" ]]; then
-            cmake --workflow workflow-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}-release
-          else
-            echo "Unknown generator_type: ${{ matrix.generator_type }}"
-            exit 1
-          fi
-        working-directory: workspace/tl-expected
-
       - name: Get Versions
         id: versions
         shell: python
@@ -497,9 +239,25 @@ jobs:
           import json
           import sys
           import os
+          from dataclasses import dataclass, field
+
+          @dataclass(frozen=True)
+          class CMakeConfigPackageVersionGrep:
+              name: str
+              version_file: Path
+
+          @dataclass(frozen=True)
+          class CMakeConfigPackageVersion:
+              name: str
+              version: str
+
+          @dataclass
+          class VersionSearchOutput:
+              versions: list[CMakeConfigPackageVersion] = field(default_factory=list)
+              errors: list[str] = field(default_factory=list)
 
           def grep_package_version(filename: Path) -> tuple[str | None, str | None]:
-              path = Path(filename)
+              path = filename
 
               if not path.is_file():
                   return (None, f"ERROR: file not found: {path}")
@@ -542,59 +300,105 @@ jobs:
 
               return (matches[0], None)
 
-          files = {
-          }
+          def get_versions_helper(
+              repos_config_file_list: list[CMakeConfigPackageVersionGrep],  # pairs of repo and files reporting versions
+              repos_auto_search_list: list[str],  # repo name only
+              repos_version: list[CMakeConfigPackageVersion],  # pairs of repo and versions
+              base_install_dir: Path,
+              install_subdir: Path,
+              base_folder_path: Path | None,
+          ) -> VersionSearchOutput:
+              result = VersionSearchOutput()
 
-          result = []
+              # fixed versions
+              for repo_v in repos_version:
+                  result.versions.append(CMakeConfigPackageVersion(name=repo_v.name, version=repo_v.version))
 
+              # repo with version with file hint
+              for repo in repos_config_file_list:
+                  if base_folder_path is not None:
+                      target_full_path = base_folder_path / base_install_dir / install_subdir / repo.version_file
+                  else:
+                      target_full_path = base_install_dir / install_subdir / repo.version_file
 
-          for name, filename in files.items():
-            v_or_err = grep_package_version(filename=filename)
-            if v_or_err[0] is not None:
-                version = v_or_err[0]
-                result.append({'name': name,'version': version})
-            elif v_or_err[1] is not None:
-                sys.exit(f'ERROR: processing {name} at {filename}: {v_or_err[1]}')
-            else:
-                sys.exit('ERROR: unexpected behavior of grep_package_version processing {name} at {filename}')
+                  version_or_err = grep_package_version(target_full_path)
 
-          repos_auto_search_list = [
-              "eigen3",
-              "fmt",
-              "fmt-eigen",
-              "cpptrace",
-              "magic_enum",
-              "libassert",
-              "tclap",
-              "Catch2",
-              "pipes",
-              "NamedType",
-              "tl-optional",
-              "tl-expected",
+                  if version_or_err[1] is not None:
+                      result.errors.append(version_or_err[1])
+
+                  else:
+                      assert version_or_err[0] is not None
+                      version = version_or_err[0]
+                      result.versions.append(CMakeConfigPackageVersion(name=repo.name, version=version))
+
+              # repo with version autosearch
+              for name in repos_auto_search_list:
+                  if base_folder_path is not None:
+                      search_path = base_folder_path / base_install_dir / install_subdir / name
+                  else:
+                      search_path = base_install_dir / install_subdir / name
+                  path_or_err = find_cmake_config_version(search_path=search_path, name=name)
+                  if path_or_err[1] is not None:
+                      result.errors.append(path_or_err[1])
+
+                  else:
+                      assert path_or_err[0] is not None
+                      path = path_or_err[0]
+
+                      version_or_err = grep_package_version(path)
+
+                      if version_or_err[1] is not None:
+                          result.errors.append(version_or_err[1])
+
+                      else:
+                          assert version_or_err[0] is not None
+                          version = version_or_err[0]
+                          result.versions.append(CMakeConfigPackageVersion(name=name, version=version))
+
+              return result
+
+          def cmake_config_package_version_list_to_dict(src: list[CMakeConfigPackageVersion]) -> list[dict[str, str]]:
+              ret = []
+              for pv in src:
+                  ret.append({"name": pv.name, "version": pv.version})
+              return ret
+
+          repos_config_file_list : list[CMakeConfigPackageVersionGrep] = []
+
+          repos_auto_search_list : list[str] = [
+              'eigen3',
           ]
 
-          for name in repos_auto_search_list:
-            search_path: Path = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}') / name
-            path_or_err = find_cmake_config_version(search_path=search_path, name=name)
-            if path_or_err[0] is not None:
-              path = path_or_err[0]
-              v_or_err = grep_package_version(filename=path)
-              if v_or_err[0] is not None:
-                version = v_or_err[0]
-                result.append({'name': name,'version': version})
-              elif v_or_err[1] is not None:
-                sys.exit(f'ERROR: processing {name} at {path}: {v_or_err[1]}')
-              else:
-                sys.exit('ERROR: unexpected behavior of grep_package_version processing {name} at {path}')
-            elif path_or_err[1] is not None:
-                sys.exit(f'ERROR: processing {name} : {path_or_err[1]}')
-            else:
-                sys.exit('ERROR: unexpected behavior of find_cmake_config_version processing {name}')
+          repos_version: list[CMakeConfigPackageVersion] = []
 
+          result = get_versions_helper(
+              repos_config_file_list,
+              repos_auto_search_list,
+              repos_version,
+              Path('workspace/install'),
+              Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'),
+              None
+          )
+          if len(result.errors) > 0:
+              for e in result.errors:
+                  print(e)
+              sys.exit('ERROR: getting package versions')
+
+          result_dict = cmake_config_package_version_list_to_dict(result.versions)
 
           output_file = os.environ["GITHUB_OUTPUT"]
           with open(output_file, "w", encoding="utf-8") as f:
-              f.write(f"packages={json.dumps(result)}\n")
+              f.write(f"packages={json.dumps(result_dict)}\n")
+
+
+          output_file = (
+              Path('workspace/install')
+              / Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}')
+              / Path('versions' + '.csOrchestratorVersion')
+          )
+
+          with open(output_file, "w", encoding="utf-8") as f:
+              f.write(f"packages={json.dumps(result_dict)}\n")
 
 
       - name: Create Archives
