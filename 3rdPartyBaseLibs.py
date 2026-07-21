@@ -57,17 +57,17 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     repos: dict[str, None | BuildConfig] = {
         "csCMake": None,
         "eigen3": BuildConfig.RELEASE,
-        "fmt": BuildConfig.DEBUG_RELEASE,
-        "fmt-eigen": BuildConfig.RELEASE,
-        "cpptrace": BuildConfig.DEBUG_RELEASE,
-        "magic_enum": BuildConfig.DEBUG_RELEASE,
-        "libassert": BuildConfig.DEBUG_RELEASE,
-        "tclap": BuildConfig.RELEASE,
-        "Catch2": BuildConfig.DEBUG_RELEASE,
-        "pipes": BuildConfig.RELEASE,
-        "NamedType": BuildConfig.RELEASE,
-        "tl-optional": BuildConfig.RELEASE,
-        "tl-expected": BuildConfig.RELEASE,
+        # "fmt": BuildConfig.DEBUG_RELEASE,
+        # "fmt-eigen": BuildConfig.RELEASE,
+        # "cpptrace": BuildConfig.DEBUG_RELEASE,
+        # "magic_enum": BuildConfig.DEBUG_RELEASE,
+        # "libassert": BuildConfig.DEBUG_RELEASE,
+        # "tclap": BuildConfig.RELEASE,
+        # "Catch2": BuildConfig.DEBUG_RELEASE,
+        # "pipes": BuildConfig.RELEASE,
+        # "NamedType": BuildConfig.RELEASE,
+        # "tl-optional": BuildConfig.RELEASE,
+        # "tl-expected": BuildConfig.RELEASE,
     }
 
     o = create_orchestrator_factory_all_supported_cases(
