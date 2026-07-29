@@ -135,8 +135,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 repo for repo, config in repos.items() if config is not None
             ],
             base_install_dir=base_install_dir,
-            id="versions",
-            output_dict_name="packages",
         )
     )
 
@@ -144,8 +142,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         StepCreateArchives(
             name="Create Archives",
             description="Create archives with libs and versions",
-            input_id="versions",
-            input_dict="packages",
             base_install_dir=base_install_dir,
         )#.add_extra(StepSkipExecutionOnLocal())
     )

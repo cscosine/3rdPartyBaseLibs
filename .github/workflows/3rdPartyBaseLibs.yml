@@ -231,7 +231,6 @@ jobs:
         working-directory: workspace/eigen3
 
       - name: Get Versions
-        id: versions
         shell: python
         run: |
           from pathlib import Path
@@ -357,11 +356,13 @@ jobs:
 
               return result
 
-          def cmake_config_package_version_list_to_dict(src: list[CMakeConfigPackageVersion]) -> list[dict[str, str]]:
+          def write_version_file(dest: Path, src: list[CMakeConfigPackageVersion]) -> None:
               ret = []
               for pv in src:
                   ret.append({"name": pv.name, "version": pv.version})
-              return ret
+
+              with open(dest, "w", encoding="utf-8") as f:
+                  json.dump(ret, f, indent=4, ensure_ascii=False)
 
           repos_config_file_list : list[CMakeConfigPackageVersionGrep] = []
 
@@ -384,15 +385,12 @@ jobs:
                   print(e)
               sys.exit('ERROR: getting package versions')
 
-          result_dict = cmake_config_package_version_list_to_dict(result.versions)
-
           output_file = (
               Path('workspace/install')
-              / Path('versions-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorVersion')
+              / Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorVersion')
           )
 
-          with open(output_file, "w", encoding="utf-8") as f:
-              f.write(f"packages={json.dumps(result_dict)}\n")
+          write_version_file(output_file, result.versions)
 
 
       - name: Create Archives
@@ -402,27 +400,38 @@ jobs:
           import os
           import sys
           import tarfile
+          from dataclasses import dataclass
           from pathlib import Path
 
-          packages = None
-          input_path = 'workspace/install/versions-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorVersion'
-          with open(input_path) as f:
-              line = f.read().strip()
-              key, value = line.split("=", 1)
-              expected_key = "packages"
-              if key != expected_key:
-                  sys.exit(f"unexpected key {key} in {str(input_path)}, expected {expected_key}")
-              packages = json.loads(value)
+          @dataclass(frozen=True)
+          class CMakeConfigPackageVersion:
+              name: str
+              version: str
+
+          def load_version_file(src: Path) -> list[CMakeConfigPackageVersion]:
+              packages = []
+              with open(src, encoding="utf-8") as f:
+                  packages = json.load(f)
+
+              # TODO make robust to errors
+              ret: list[CMakeConfigPackageVersion] = []
+              for item in packages:
+                  name = item["name"]
+                  version = item["version"]
+                  ret.append(CMakeConfigPackageVersion(name, version))
+
+              return ret
+
+
+          packages = load_version_file('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorVersion')
 
           if packages is None:
               sys.exit('packages was not loaded')
 
-          for entry in packages:
-              name = entry['name']
-              version = entry['version']
+          for item in packages:
               install_subdir = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}').resolve()
-              source_path = Path(install_subdir / Path(name)).resolve()
-              output_path = Path(install_subdir / Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}' + '-' + name + '-' + version + '.tar.gz')).resolve()
+              source_path = Path(install_subdir / Path(item.name)).resolve()
+              output_path = Path(install_subdir / Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}' + '-' + item.name + '-' + item.version + '.tar.gz')).resolve()
 
               with tarfile.open(output_path, 'w:gz') as tar:
                   for path in source_path.rglob('*'):
