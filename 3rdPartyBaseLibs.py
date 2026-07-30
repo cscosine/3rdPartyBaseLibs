@@ -13,7 +13,6 @@ from csorchestrator.domain.orchestrator.workflow_config import (
     WorkflowConfig,
     Cron,
     DayOfWeek,
-    ReleaseCreationOnTagConfig,
 )
 
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
@@ -37,7 +36,10 @@ from csorchestrator.frontend.step.step_upload_artifacts import (
 
 from csorchestrator.frontend.local_execution.step_utils import (
     StepExecuteOnlyOncePerMatrix,
-    StepSkipExecutionOnLocal,
+)
+
+from csorchestrator.frontend.release_manifest.release_creation import (
+    ReleaseCreationOnTagConfig,
 )
 
 from csorchestrator.application.factory.factory import (
@@ -82,8 +84,12 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         on_pull_request_branches=["main"],
         on_dispatch=True,
         on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
-        create_release_on_tag=ReleaseCreationOnTagConfig(name="release-from-artifacts"),
+        create_release_on_tag=ReleaseCreationOnTagConfig(
+            name="release-from-artifacts", base_install_dir=base_install_dir
+        ),
     )
+
+    # return OptionalResultWithReport.createResultAndReport(o, report)
 
     # ----------------------------------------------------------------
     p = o.create_phase("Repos Update")
@@ -143,7 +149,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             name="Create Archives",
             description="Create archives with libs and versions",
             base_install_dir=base_install_dir,
-        )#.add_extra(StepSkipExecutionOnLocal())
+        )  # .add_extra(StepSkipExecutionOnLocal())
     )
 
     p.add_step(

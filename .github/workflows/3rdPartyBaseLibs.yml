@@ -33,11 +33,105 @@ jobs:
       - name: Show downloaded files
         run: find artifacts -type f
 
+      - name: Manifest creation
+        shell: python
+        run: |
+          from dataclasses import dataclass, field
+          from pathlib import Path
+          import json
+
+          @dataclass(frozen=True)
+          class CMakeConfigPackageVersion:
+              name: str
+              version: str
+
+          @dataclass
+          class ManifestVersionsEntry:
+              variant_string_description: str
+              entries: list[CMakeConfigPackageVersion] = field(default_factory=list)
+
+          def create_release_manifest(
+              entries: list[ManifestVersionsEntry],
+          ) -> dict[str, list[dict[str, str]]]:
+              return {
+                  entry.variant_string_description: [{"name": pv.name, "version": pv.version} for pv in entry.entries]
+                  for entry in entries
+              }
+
+          def write_release_manifest(
+              manifest: dict[str, list[dict[str, str]]],
+              filename: Path,
+          ) -> None:
+              """Write a release manifest to a JSON file."""
+              path = Path(filename)
+              # TODO robustify and return possible errors
+              with path.open("w", encoding="utf-8") as f:
+                  json.dump(manifest, f, indent=2, sort_keys=True)
+
+          def load_version_file(src: Path) -> list[CMakeConfigPackageVersion]:
+              packages = []
+              with open(src, encoding="utf-8") as f:
+                  packages = json.load(f)
+
+              # TODO make robust to errors
+              ret: list[CMakeConfigPackageVersion] = []
+              for item in packages:
+                  name = item["name"]
+                  version = item["version"]
+                  ret.append(CMakeConfigPackageVersion(name, version))
+
+              return ret
+
+          input_files_list = [
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig/csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig/csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja/csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja/csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig/csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig/csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja/csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja/csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022/csv1-windows-v10-x64-generic-msvc-default-msvc2022.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026/csv1-windows-v10-x64-generic-msvc-default-msvc2026.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022/csv1-windows-v10-x64-generic-msvcclang-default-msvc2022.csOrchestratorVersion',
+            '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026/csv1-windows-v10-x64-generic-msvcclang-default-msvc2026.csOrchestratorVersion',
+          ]
+
+          input_names_list = [
+            'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig',
+            'csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig',
+            'csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja',
+            'csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja',
+            'csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig',
+            'csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig',
+            'csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja',
+            'csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja',
+            'csv1-windows-v10-x64-generic-msvc-default-msvc2022',
+            'csv1-windows-v10-x64-generic-msvc-default-msvc2026',
+            'csv1-windows-v10-x64-generic-msvcclang-default-msvc2022',
+            'csv1-windows-v10-x64-generic-msvcclang-default-msvc2026',
+          ]
+
+          collected_version_entries: list[ManifestVersionsEntry] = []
+
+          for name,f in zip(input_names_list,input_files_list):
+            packages = load_version_file(f)
+            collected_version_entries.append(
+              ManifestVersionsEntry(name, packages)
+            )
+
+          release_manifest = create_release_manifest(collected_version_entries)
+          output_filename = Path('3rdPartyBaseLibs-0.1.0.csOrchestratorManifest')
+          write_release_manifest(release_manifest,output_filename)
+
+        working-directory: artifacts
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v3
         with:
           files: |
-            artifacts/**/*
+            artifacts/**/*.tar.gz
+            artifacts/**/*.csOrchestratorManifest
 
   orchestrator-matrix:
     runs-on: ${{ matrix.runner }}
