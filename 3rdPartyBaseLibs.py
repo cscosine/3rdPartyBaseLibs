@@ -13,6 +13,7 @@ from csorchestrator.domain.orchestrator.workflow_config import (
     WorkflowConfig,
     Cron,
     DayOfWeek,
+    WorkflowTrigger,
 )
 
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
@@ -79,11 +80,13 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     )
 
     o.wf_config = WorkflowConfig(
-        on_push_branches=["main", "dev"],
-        on_push_tags=["'v*.*.*'"],
-        on_pull_request_branches=["main"],
-        on_dispatch=True,
-        on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
+        trigger=WorkflowTrigger(
+            on_push_branches=["main", "dev"],
+            on_push_tags=["'v*.*.*'"],
+            on_pull_request_branches=["main"],
+            on_dispatch=True,
+            on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
+        ),
         create_release_on_tag=ReleaseCreationOnTagConfig(
             name="release-from-artifacts", base_install_dir=base_install_dir
         ),
