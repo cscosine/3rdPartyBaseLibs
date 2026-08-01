@@ -19,7 +19,6 @@ jobs:
     needs: orchestrator-matrix
     runs-on: ubuntu-latest
 
-    if: ${{ github.ref_type == 'tag' }}
 
     permissions:
       contents: write
@@ -36,7 +35,8 @@ jobs:
       - name: Manifest creation
         shell: python
         run: |
-          from dataclasses import dataclass, field
+          from dataclasses import dataclass, field, asdict
+          from typing import Any, ClassVar
           from pathlib import Path
           import json
 
@@ -45,28 +45,66 @@ jobs:
               name: str
               version: str
 
+              def to_dict(self) -> dict[str, str]:
+                  return asdict(self)
+
+              @classmethod
+              def from_dict(cls, data: dict[str, str]) -> "CMakeConfigPackageVersion":
+                  return cls(**data)
+
           @dataclass
           class ManifestVersionsEntry:
-              variant_string_description: str
+              variant: str
               entries: list[CMakeConfigPackageVersion] = field(default_factory=list)
 
-          def create_release_manifest(
-              entries: list[ManifestVersionsEntry],
-          ) -> dict[str, list[dict[str, str]]]:
-              return {
-                  entry.variant_string_description: [{"name": pv.name, "version": pv.version} for pv in entry.entries]
-                  for entry in entries
-              }
+              def to_dict(self) -> dict[str, Any]:
+                  return {
+                      "variant": self.variant,
+                      "entries": [entry.to_dict() for entry in self.entries],
+                  }
+
+              @classmethod
+              def from_dict(cls, data: dict[str, Any]) -> "ManifestVersionsEntry":
+                  return cls(
+                      variant=data["variant"],
+                      entries=[CMakeConfigPackageVersion.from_dict(entry) for entry in data["entries"]],
+                  )
+
+          @dataclass
+          class Manifest:
+              manifest_version: str
+              project_name: str
+              project_version: str
+              variants: list[ManifestVersionsEntry] = field(default_factory=list)
+
+              MANIFEST_VERSION: ClassVar[str] = "1.0"
+
+              def to_dict(self) -> dict[str, Any]:
+                  return {
+                      "manifest_version": self.manifest_version,
+                      "project_name": self.project_name,
+                      "project_version": self.project_version,
+                      "variants": [variant.to_dict() for variant in self.variants],
+                  }
+
+              @classmethod
+              def from_dict(cls, data: dict[str, Any]) -> "Manifest":
+                  return cls(
+                      manifest_version=data["manifest_version"],
+                      project_name=data["project_name"],
+                      project_version=data["project_version"],
+                      variants=[ManifestVersionsEntry.from_dict(variant) for variant in data["variants"]],
+                  )
 
           def write_release_manifest(
-              manifest: dict[str, list[dict[str, str]]],
+              manifest: Manifest,
               filename: Path,
           ) -> None:
               """Write a release manifest to a JSON file."""
               path = Path(filename)
               # TODO robustify and return possible errors
               with path.open("w", encoding="utf-8") as f:
-                  json.dump(manifest, f, indent=2, sort_keys=True)
+                  json.dump(manifest.to_dict(), f, indent=2, sort_keys=True)
 
           def load_version_file(src: Path) -> list[CMakeConfigPackageVersion]:
               packages = []
@@ -74,11 +112,7 @@ jobs:
                   packages = json.load(f)
 
               # TODO make robust to errors
-              ret: list[CMakeConfigPackageVersion] = []
-              for item in packages:
-                  name = item["name"]
-                  version = item["version"]
-                  ret.append(CMakeConfigPackageVersion(name, version))
+              ret = [CMakeConfigPackageVersion.from_dict(entry) for entry in packages]
 
               return ret
 
@@ -120,13 +154,25 @@ jobs:
               ManifestVersionsEntry(name, packages)
             )
 
-          release_manifest = create_release_manifest(collected_version_entries)
+          release_manifest = Manifest(
+            manifest_version=Manifest.MANIFEST_VERSION,
+            project_name='3rdPartyBaseLibs',
+            project_version='0.1.0',
+            variants=collected_version_entries,
+          )
           output_filename = Path('3rdPartyBaseLibs-0.1.0.csOrchestratorManifest')
           write_release_manifest(release_manifest,output_filename)
 
         working-directory: artifacts
 
+      - name: Upload manifest
+        uses: actions/upload-artifact@v4
+        with:
+          name: manifest.csOrchestratorManifest
+          path: artifacts/**/*.csOrchestratorManifest
+
       - name: Create GitHub Release
+        if: ${{ github.ref_type == 'tag' }}
         uses: softprops/action-gh-release@v3
         with:
           files: |
@@ -590,7 +636,8 @@ jobs:
           import json
           import sys
           import os
-          from dataclasses import dataclass, field
+          from dataclasses import dataclass, field, asdict
+          from typing import Any, ClassVar
 
           @dataclass(frozen=True)
           class CMakeConfigPackageVersionGrep:
@@ -601,6 +648,13 @@ jobs:
           class CMakeConfigPackageVersion:
               name: str
               version: str
+
+              def to_dict(self) -> dict[str, str]:
+                  return asdict(self)
+
+              @classmethod
+              def from_dict(cls, data: dict[str, str]) -> "CMakeConfigPackageVersion":
+                  return cls(**data)
 
           @dataclass
           class VersionSearchOutput:
@@ -709,9 +763,7 @@ jobs:
               return result
 
           def write_version_file(dest: Path, src: list[CMakeConfigPackageVersion]) -> None:
-              ret = []
-              for pv in src:
-                  ret.append({"name": pv.name, "version": pv.version})
+              ret = [entry.to_dict() for entry in src]
 
               with open(dest, "w", encoding="utf-8") as f:
                   json.dump(ret, f, indent=4, ensure_ascii=False)
@@ -771,17 +823,20 @@ jobs:
               name: str
               version: str
 
+              def to_dict(self) -> dict[str, str]:
+                  return asdict(self)
+
+              @classmethod
+              def from_dict(cls, data: dict[str, str]) -> "CMakeConfigPackageVersion":
+                  return cls(**data)
+
           def load_version_file(src: Path) -> list[CMakeConfigPackageVersion]:
               packages = []
               with open(src, encoding="utf-8") as f:
                   packages = json.load(f)
 
               # TODO make robust to errors
-              ret: list[CMakeConfigPackageVersion] = []
-              for item in packages:
-                  name = item["name"]
-                  version = item["version"]
-                  ret.append(CMakeConfigPackageVersion(name, version))
+              ret = [CMakeConfigPackageVersion.from_dict(entry) for entry in packages]
 
               return ret
 

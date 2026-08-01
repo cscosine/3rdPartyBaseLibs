@@ -50,7 +50,7 @@ from csorchestrator.application.factory.factory import (
 from csorchestrator.application.cli.cli import orchestrator_main_with_default_run
 
 
-def create_orchestrator() -> OptionalOrchestratorWithReport:
+def create_orchestrator(target_folder: Path) -> OptionalOrchestratorWithReport:
     report = Report()
 
     base_target_dir = Path("workspace")
