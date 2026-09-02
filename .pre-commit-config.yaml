@@ -33,3 +33,8 @@ repos:
       - id: clang-format
         exclude: '\.m$'
         args: ["-style=LLVM"]
+
+  - repo: https://github.com/rhysd/actionlint
+    rev: v1.7.12
+    hooks:
+      - id: actionlint
