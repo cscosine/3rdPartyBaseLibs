@@ -39,7 +39,7 @@ from csorchestrator.frontend.local_execution.step_utils import (
     StepExecuteOnlyOncePerMatrix,
 )
 
-from csorchestrator.frontend.release_manifest.release_creation import (
+from csorchestrator.frontend.step.release_creation import (
     ReleaseCreationOnTagConfig,
 )
 
