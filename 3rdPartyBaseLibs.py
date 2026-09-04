@@ -1,53 +1,49 @@
 #!/usr/bin/env python3
 import sys
+from collections.abc import Sequence
 from pathlib import Path
-from typing import Sequence
 
-from csorchestrator.foundation.core.report import Report
-from csorchestrator.foundation.core.optional_result_with_report import (
-    OptionalResultWithReport,
-)
-from csorchestrator.foundation.git.resolve_url import RepoUrlParts
-
-from csorchestrator.domain.orchestrator.workflow_config import (
-    WorkflowConfig,
-    Cron,
-    DayOfWeek,
-    WorkflowTrigger,
-)
-
-from csorchestrator.frontend.cscmake_presets.supported_variants import (
-    BuildConfig,
-)
-
-from csorchestrator.frontend.step.step_get_repository import (
-    StepGetRepositoryGitHub,
-    StepGetRepositoryExtraDepthOne,
-    StepGetRepositoryExtraAccessToken,
-)
-from csorchestrator.frontend.step.step_cmake_command import StepCMakeWorkflow
-from csorchestrator.frontend.step.step_get_versions_from_cmake_config_package_version import (
-    StepGetVersionsFromCMakeConfigPackageVersion,
-)
-from csorchestrator.frontend.step.step_create_archives import StepCreateArchives
-from csorchestrator.frontend.step.step_upload_artifacts import (
-    StepUploadArtifacts,
-    create_artifact_prefix_from_orchestrator_name_version,
-)
-
-from csorchestrator.frontend.local_execution.step_utils import (
-    StepExecuteOnlyOncePerMatrix,
-)
-
-from csorchestrator.frontend.step.release_creation import (
-    ReleaseCreationOnTagConfig,
-)
-
+from csorchestrator.application.cli.cli import orchestrator_main_with_default_run
 from csorchestrator.application.factory.factory import (
     OptionalOrchestratorWithReport,
     create_orchestrator_factory_all_supported_cases,
 )
-from csorchestrator.application.cli.cli import orchestrator_main_with_default_run
+from csorchestrator.domain.orchestrator.workflow_config import (
+    Cron,
+    DayOfWeek,
+    WorkflowConfig,
+    WorkflowTrigger,
+)
+from csorchestrator.foundation.core.optional_result_with_report import (
+    OptionalResultWithReport,
+)
+from csorchestrator.foundation.core.report import Report
+from csorchestrator.foundation.git.resolve_url import (
+    RepoUrlParts,
+)
+from csorchestrator.frontend.cscmake_presets.supported_variants import (
+    BuildConfig,
+)
+from csorchestrator.frontend.local_execution.step_utils import (
+    StepExecuteOnlyOncePerMatrix,
+)
+from csorchestrator.frontend.step.release_creation import (
+    ReleaseCreationOnTagConfig,
+)
+from csorchestrator.frontend.step.step_cmake_command import StepCMakeWorkflow
+from csorchestrator.frontend.step.step_create_archives import StepCreateArchives
+from csorchestrator.frontend.step.step_get_repository import (
+    StepGetRepositoryExtraAccessToken,
+    StepGetRepositoryExtraDepthOne,
+    StepGetRepositoryGitHub,
+)
+from csorchestrator.frontend.step.step_get_versions_from_cmake_config_package_version import (
+    StepGetVersionsFromCMakeConfigPackageVersion,
+)
+from csorchestrator.frontend.step.step_upload_artifacts import (
+    StepUploadArtifacts,
+    create_artifact_prefix_from_orchestrator_name_version,
+)
 
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
@@ -56,21 +52,22 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
+    _ = common_repo_ref
 
     repos: dict[str, None | BuildConfig] = {
         "csCMake": None,
         "eigen3": BuildConfig.RELEASE,
-        "fmt": BuildConfig.DEBUG_RELEASE,
-        "fmt-eigen": BuildConfig.RELEASE,
-        "cpptrace": BuildConfig.DEBUG_RELEASE,
-        "magic_enum": BuildConfig.DEBUG_RELEASE,
-        "libassert": BuildConfig.DEBUG_RELEASE,
+        # "fmt": BuildConfig.DEBUG_RELEASE,
+        # "fmt-eigen": BuildConfig.RELEASE,
+        # "cpptrace": BuildConfig.DEBUG_RELEASE,
+        # "magic_enum": BuildConfig.DEBUG_RELEASE,
+        # "libassert": BuildConfig.DEBUG_RELEASE,
         "tclap": BuildConfig.RELEASE,
-        "Catch2": BuildConfig.DEBUG_RELEASE,
-        "pipes": BuildConfig.RELEASE,
-        "NamedType": BuildConfig.RELEASE,
-        "tl-optional": BuildConfig.RELEASE,
-        "tl-expected": BuildConfig.RELEASE,
+        # "Catch2": BuildConfig.DEBUG_RELEASE,
+        # "pipes": BuildConfig.RELEASE,
+        # "NamedType": BuildConfig.RELEASE,
+        # "tl-optional": BuildConfig.RELEASE,
+        # "tl-expected": BuildConfig.RELEASE,
     }
 
     o = create_orchestrator_factory_all_supported_cases(
@@ -94,7 +91,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     # ----------------------------------------------------------------
     p = o.create_phase("Repos Update")
-    for repo in repos.keys():
+    for repo in repos:
         p.add_step(
             StepGetRepositoryGitHub(
                 name=f"{repo} Git clone/pull-ff",
@@ -114,11 +111,8 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
                 )
             )
             .add_extra(StepExecuteOnlyOncePerMatrix())
-            .add_extra(
-                StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}")
-            )
+            .add_extra(StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}"))
         )
-
     # ----------------------------------------------------------------
     p = o.create_phase("Configure-Build-Test-Install")
     for repo, config in repos.items():
@@ -138,9 +132,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         StepGetVersionsFromCMakeConfigPackageVersion(
             name="Get Versions",
             description="Get Versions for all libs",
-            repos_auto_search_list=[
-                repo for repo, config in repos.items() if config is not None
-            ],
+            repos_auto_search_list=[repo for repo, config in repos.items() if config is not None],
             base_install_dir=base_install_dir,
         )
     )
