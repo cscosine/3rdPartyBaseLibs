@@ -19,6 +19,8 @@ jobs:
     permissions:
       contents: write
     steps:
+    - name: Repo Self Checkout
+      uses: actions/checkout@v6
     - name: Download all artifacts
       uses: actions/download-artifact@v8
       with:
@@ -26,142 +28,34 @@ jobs:
     - name: Show downloaded files
       run: find artifacts -type f
     - name: Manifest creation
-      run: |
-        from dataclasses import dataclass, field, asdict
-        from typing import Any, ClassVar
+      run: |-
+        import sys
         from pathlib import Path
-        import json
+        from typing import cast
 
-        @dataclass(frozen=True)
-        class PackageVersion:
-            name: str
-            version: str
-
-            def to_dict(self) -> dict[str, str]:
-                return asdict(self)
-
-            @classmethod
-            def from_dict(cls, data: dict[str, str]) -> "PackageVersion":
-                return cls(**data)
-
-        @dataclass
-        class ManifestVersionsEntry:
-            variant: str
-            entries: list[PackageVersion] = field(default_factory=list)
-
-            def to_dict(self) -> dict[str, Any]:
-                return {
-                    "variant": self.variant,
-                    "entries": [entry.to_dict() for entry in self.entries],
-                }
-
-            @classmethod
-            def from_dict(cls, data: dict[str, Any]) -> "ManifestVersionsEntry":
-                return cls(
-                    variant=data["variant"],
-                    entries=[PackageVersion.from_dict(entry) for entry in data["entries"]],
-                )
-
-        @dataclass
-        class ReleaseManifest:
-            project_name: str
-            project_version: str
-            variants: list[ManifestVersionsEntry] = field(default_factory=list)
-
-            MANIFEST_VERSION: ClassVar[str] = "1.0"
-            manifest_version: str = MANIFEST_VERSION
-
-            CS_ORCHESTRATOR_MANIFEST_EXTENSION: ClassVar[str] = ".csOrchestratorManifest"
-            CS_ORCHESTRATOR_MANIFEST_ROOT: ClassVar[str] = "csOrchestratorManifest"
-
-            def to_dict(self) -> dict[str, Any]:
-                return {
-                    ReleaseManifest.CS_ORCHESTRATOR_MANIFEST_ROOT: {
-                        "manifest_version": self.manifest_version,
-                        "project_name": self.project_name,
-                        "project_version": self.project_version,
-                        "variants": [variant.to_dict() for variant in self.variants],
-                    }
-                }
-
-            @classmethod
-            def from_dict(cls, data: dict[str, Any]) -> "ReleaseManifest":
-                in_data = data[ReleaseManifest.CS_ORCHESTRATOR_MANIFEST_ROOT]
-                return cls(
-                    manifest_version=in_data["manifest_version"],
-                    project_name=in_data["project_name"],
-                    project_version=in_data["project_version"],
-                    variants=[ManifestVersionsEntry.from_dict(variant) for variant in in_data["variants"]],
-                )
-
-            def write_release_manifest(
-                self,
-                filename: Path,
-            ) -> None:
-                """Write a release manifest to a JSON file."""
-                path = Path(filename)
-                # TODO robustify and return possible errors
-                with path.open("w", encoding="utf-8") as f:
-                    json.dump(self.to_dict(), f, indent=2, sort_keys=True)
-
-            @classmethod
-            def load_release_manifest(
-                cls,
-                filename: Path,
-            ) -> "ReleaseManifest":
-                """Load a release manifest from a JSON file."""
-                path = Path(filename)
-                # TODO robustify and return possible errors
-                with path.open("r", encoding="utf-8") as f:
-                    return ReleaseManifest.from_dict(json.load(f))
-
-        input_files_list = [
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022.csOrchestratorManifest',
-          '3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026.csOrchestratorManifest',
-        ]
-
-        input_names_list = [
-          'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig',
-          'csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig',
-          'csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja',
-          'csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja',
-          'csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig',
-          'csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig',
-          'csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja',
-          'csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja',
-          'csv1-windows-v10-x64-generic-msvc-default-msvc2022',
-          'csv1-windows-v10-x64-generic-msvc-default-msvc2026',
-          'csv1-windows-v10-x64-generic-msvcclang-default-msvc2022',
-          'csv1-windows-v10-x64-generic-msvcclang-default-msvc2026',
-        ]
-
-        collected_version_entries: list[ManifestVersionsEntry] = []
-
-        for name,f in zip(input_names_list,input_files_list):
-          packages = load_version_file(f)
-          collected_version_entries.append(
-            ManifestVersionsEntry(name, packages)
-          )
-
-        release_manifest = Manifest(
-          manifest_version=Manifest.MANIFEST_VERSION,
-          project_name='3rdPartyBaseLibs',
-          project_version='0.1.0',
-          variants=collected_version_entries,
+        from csorchestrator.portable.release_manifest import (
+            collect_release_manifest_single_variant_and_prepare_manifest,
         )
-        output_filename = Path('3rdPartyBaseLibs-0.1.0.csOrchestratorManifest')
-        release_manifest.write_release_manifest(output_filename)
+
+        input_manifest_path_variant = [(Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2022'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2026'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2022'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2026')]
+        output_filepath = Path('3rdPartyBaseLibs-0.1.0.csOrchestratorManifest')
+        project_name = '3rdPartyBaseLibs'
+        project_version = "__PROJECT_VERSION__"
+
+        errors_list = collect_release_manifest_single_variant_and_prepare_manifest(
+            input_manifest_path_variant=input_manifest_path_variant,
+            output_filepath=output_filepath,
+            project_name=project_name,
+            project_version=project_version,
+        )
+
+        if len(errors_list) > 0:
+            for e in errors_list:
+                print(e)
+            sys.exit("ERROR: getting package versions")
       shell: python
+      env:
+        PYTHONPATH: ${{ github.workspace }}
       working-directory: artifacts
     - name: Upload artifacts
       uses: actions/upload-artifact@v7
@@ -455,5 +349,5 @@ jobs:
       with:
         name: 3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}
         path: |-
-          workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}/*.tar.gz
+          workspace/install/*.tar.gz
           workspace/install/*.csOrchestratorManifest

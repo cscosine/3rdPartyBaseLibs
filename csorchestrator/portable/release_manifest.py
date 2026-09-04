@@ -119,22 +119,34 @@ def get_package_versions_and_write_single_variant_manifest(
     return []
 
 
+def load_release_manifest_single_variant(
+    input_full_path: Path, expected_context_os_architecture_compiler_generator_string: str
+) -> list[PackageVersion] | str:  # str in case of error
+    packages = ReleaseManifest.load_release_manifest(input_full_path)
+    if len(packages.variants) == 0 or len(packages.variants) > 1:
+        return f"release manifest {str(input_full_path)} has {len(packages.variants)} variants, expected 1"
+
+    if expected_context_os_architecture_compiler_generator_string != packages.variants[0].variant:
+        return f"release manifest {str(input_full_path)} has variant name {packages.variants[0].variant}, expected {expected_context_os_architecture_compiler_generator_string}"  # noqa: E501
+
+    return packages.variants[0].entries
+
+
 def load_release_manifest_single_variant_and_prepare_archive(
     input_full_path: Path,
     context_os_architecture_compiler_generator_string: str,
     input_base_dir: Path,
 ) -> list[str]:  # return errors
     # load which packages to create archives for from the version file (eg. eigen3: 3.4.0, boost: 1.82.0, etc)
-    packages = ReleaseManifest.load_release_manifest(input_full_path)
-    if len(packages.variants) == 0 or len(packages.variants) > 1:
-        return [f"release manifest {str(input_full_path)} has {len(packages.variants)} variants, expected 1"]
+    packages_or_error = load_release_manifest_single_variant(
+        input_full_path, context_os_architecture_compiler_generator_string
+    )
 
-    if context_os_architecture_compiler_generator_string != packages.variants[0].variant:
-        return [
-            f"release manifest {str(input_full_path)} has variant name {packages.variants[0].variant}, expected {context_os_architecture_compiler_generator_string}"  # noqa: E501
-        ]
+    if isinstance(packages_or_error, str):
+        return [packages_or_error]
+    packages = packages_or_error
 
-    for item in packages.variants[0].entries:
+    for item in packages:
         input_path = Path(
             input_base_dir / context_os_architecture_compiler_generator_string / Path(item.name)
         ).resolve()
@@ -155,5 +167,37 @@ def load_release_manifest_single_variant_and_prepare_archive(
                 resolved_path = path.resolve()
                 arcname = path.resolve().relative_to(input_base_dir)
                 tar.add(resolved_path, arcname=arcname)
+
+    return []
+
+
+def collect_release_manifest_single_variant_and_prepare_manifest(
+    input_manifest_path_variant: list[tuple[Path, str]],
+    output_filepath: Path,
+    project_name: str,
+    project_version: str,
+) -> list[str]:  # return errors
+    collected_version_entries: list[ManifestVersionsEntry] = []
+    for input_full_path, context_os_architecture_compiler_generator_string in input_manifest_path_variant:
+        packages_or_error = load_release_manifest_single_variant(
+            input_full_path, context_os_architecture_compiler_generator_string
+        )
+
+        if isinstance(packages_or_error, str):
+            return [packages_or_error]
+        packages = packages_or_error
+
+        collected_version_entries.append(
+            ManifestVersionsEntry(variant=context_os_architecture_compiler_generator_string, entries=packages)
+        )
+
+    release_manifest = ReleaseManifest(
+        project_name=project_name,
+        project_version=project_version,
+        variants=collected_version_entries,
+    )
+    release_manifest.write_release_manifest(
+        output_filepath,
+    )
 
     return []
