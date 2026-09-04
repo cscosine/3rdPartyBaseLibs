@@ -36,6 +36,7 @@ from csorchestrator.frontend.step.step_get_repository import (
     StepGetRepositoryExtraAccessToken,
     StepGetRepositoryExtraDepthOne,
     StepGetRepositoryGitHub,
+    StepGetRepositoryGitHubSelf,
 )
 from csorchestrator.frontend.step.step_get_versions_from_cmake_config_package_version import (
     StepGetVersionsFromCMakeConfigPackageVersion,
@@ -91,6 +92,15 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
 
     # ----------------------------------------------------------------
     p = o.create_phase("Repos Update")
+
+    # checkout myself for github actions
+    p.add_step(
+        StepGetRepositoryGitHubSelf(
+            name="3rdPartyBaseLibs git self-checkout",
+            description="Checkout self repository",
+        )
+    )
+
     for repo in repos:
         p.add_step(
             StepGetRepositoryGitHub(

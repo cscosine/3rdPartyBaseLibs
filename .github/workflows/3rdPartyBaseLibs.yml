@@ -333,6 +333,8 @@ jobs:
           runner: windows-2025-vs2026
           toolset: ClangCL
     steps:
+    - name: 3rdPartyBaseLibs git self-checkout
+      uses: actions/checkout@v6
     - name: csCMake Git clone/pull-ff
       uses: actions/checkout@v6
       with:
@@ -419,6 +421,8 @@ jobs:
                 print(e)
             sys.exit("ERROR: getting package versions")
       shell: python
+      env:
+        PYTHONPATH: ${{ github.workspace }}
     - name: Create Archives
       run: |-
         import json
