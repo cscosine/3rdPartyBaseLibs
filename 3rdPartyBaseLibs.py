@@ -101,28 +101,31 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         )
     )
 
-    for repo in repos:
-        p.add_step(
-            StepGetRepositoryGitHub(
-                name=f"{repo} Git clone/pull-ff",
-                description=f"Clone or pull-ff {repo} description",
-                target_directory=(base_target_dir / repo).as_posix(),
-                repo_url_parts=RepoUrlParts(
-                    repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
-                    repo_org="cscosine",
-                    repo_name=repo + ".git",
-                ),
-                repo_ref=common_repo_ref,
-            )
-            .add_extra(
-                StepGetRepositoryExtraDepthOne(
-                    on_local_checkout=False,
-                    on_github_action_checkout=True,
+    skip_repo_chekout = False
+
+    if not skip_repo_chekout:
+        for repo in repos:
+            p.add_step(
+                StepGetRepositoryGitHub(
+                    name=f"{repo} Git clone/pull-ff",
+                    description=f"Clone or pull-ff {repo} description",
+                    target_directory=(base_target_dir / repo).as_posix(),
+                    repo_url_parts=RepoUrlParts(
+                        repo_base_url=StepGetRepositoryGitHub.GITHUB_BASE_URL_SSH,
+                        repo_org="cscosine",
+                        repo_name=repo + ".git",
+                    ),
+                    repo_ref=common_repo_ref,
                 )
+                .add_extra(
+                    StepGetRepositoryExtraDepthOne(
+                        on_local_checkout=False,
+                        on_github_action_checkout=True,
+                    )
+                )
+                .add_extra(StepExecuteOnlyOncePerMatrix())
+                .add_extra(StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}"))
             )
-            .add_extra(StepExecuteOnlyOncePerMatrix())
-            .add_extra(StepGetRepositoryExtraAccessToken("${{ secrets.ACTIONS_ORG_ACCESS }}"))
-        )
     # ----------------------------------------------------------------
     p = o.create_phase("Configure-Build-Test-Install")
     for repo, config in repos.items():

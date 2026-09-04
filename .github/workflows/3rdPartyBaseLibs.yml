@@ -425,42 +425,31 @@ jobs:
         PYTHONPATH: ${{ github.workspace }}
     - name: Create Archives
       run: |-
-        import json
-        import os
         import sys
-        import tarfile
-        from dataclasses import dataclass
         from pathlib import Path
+        from typing import cast
 
-        @dataclass(frozen=True)
-        class PackageVersion:
-            name: str
-            version: str
+        from csorchestrator.portable.release_manifest import (
+            load_release_manifest_single_variant_and_prepare_archive,
+        )
 
-            def to_dict(self) -> dict[str, str]:
-                return asdict(self)
+        input_full_path = Path('workspace/install/3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
+        context_os_architecture_compiler_generator_string = 'csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'
+        input_base_dir = Path('workspace/install')
 
-            @classmethod
-            def from_dict(cls, data: dict[str, str]) -> "PackageVersion":
-                return cls(**data)
+        errors_list = load_release_manifest_single_variant_and_prepare_archive(
+            input_full_path=input_full_path,
+            context_os_architecture_compiler_generator_string=context_os_architecture_compiler_generator_string,
+            input_base_dir=input_base_dir.resolve(),
+        )
 
-
-        packages = load_version_file('workspace/install/3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
-
-        if packages is None:
-            sys.exit('packages was not loaded')
-
-        for item in packages:
-            install_subdir = Path('workspace/install/csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}').resolve()
-            source_path = Path(install_subdir / Path(item.name)).resolve()
-            output_path = Path(install_subdir / Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}' + '-' + item.name + '-' + item.version + '.tar.gz')).resolve()
-
-            with tarfile.open(output_path, 'w:gz') as tar:
-                for path in source_path.rglob('*'):
-                    resolved_path = path.resolve()
-                    arcname = path.resolve().relative_to(install_subdir)
-                    tar.add(resolved_path, arcname=arcname)
+        if len(errors_list) > 0:
+            for e in errors_list:
+                print(e)
+            sys.exit("ERROR: getting package versions")
       shell: python
+      env:
+        PYTHONPATH: ${{ github.workspace }}
     - name: Upload Artifacts
       uses: actions/upload-artifact@v7
       with:

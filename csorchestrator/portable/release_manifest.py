@@ -1,4 +1,5 @@
 import json
+import tarfile
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, ClassVar
@@ -114,5 +115,45 @@ def get_package_versions_and_write_single_variant_manifest(
     )
 
     manifest.write_release_manifest(output_file)
+
+    return []
+
+
+def load_release_manifest_single_variant_and_prepare_archive(
+    input_full_path: Path,
+    context_os_architecture_compiler_generator_string: str,
+    input_base_dir: Path,
+) -> list[str]:  # return errors
+    # load which packages to create archives for from the version file (eg. eigen3: 3.4.0, boost: 1.82.0, etc)
+    packages = ReleaseManifest.load_release_manifest(input_full_path)
+    if len(packages.variants) == 0 or len(packages.variants) > 1:
+        return [f"release manifest {str(input_full_path)} has {len(packages.variants)} variants, expected 1"]
+
+    if context_os_architecture_compiler_generator_string != packages.variants[0].variant:
+        return [
+            f"release manifest {str(input_full_path)} has variant name {packages.variants[0].variant}, expected {context_os_architecture_compiler_generator_string}"  # noqa: E501
+        ]
+
+    for item in packages.variants[0].entries:
+        input_path = Path(
+            input_base_dir / context_os_architecture_compiler_generator_string / Path(item.name)
+        ).resolve()
+        output_path = Path(
+            input_base_dir
+            / Path(
+                str(context_os_architecture_compiler_generator_string)
+                + "-"
+                + item.name
+                + "-"
+                + item.version
+                + ".tar.gz"
+            )
+        ).resolve()
+
+        with tarfile.open(output_path, "w:gz") as tar:
+            for path in input_path.rglob("*"):
+                resolved_path = path.resolve()
+                arcname = path.resolve().relative_to(input_base_dir)
+                tar.add(resolved_path, arcname=arcname)
 
     return []
