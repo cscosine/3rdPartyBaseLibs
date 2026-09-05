@@ -86,7 +86,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
             on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
         ),
         create_release_on_tag=ReleaseCreationOnTagConfig(
-            name="release-from-artifacts", base_install_dir=base_install_dir
+            name="release-from-artifacts", base_install_dir=base_install_dir, artifacts_dir="artifacts"
         ),
     )
 
