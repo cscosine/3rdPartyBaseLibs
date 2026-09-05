@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, ClassVar
 
-from csorchestrator.portable.package_version import (
+from .package_version import (
     CMakeConfigPackageVersionGrep,
     PackageVersion,
     get_package_versions_helper,
