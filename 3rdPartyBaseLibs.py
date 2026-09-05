@@ -6,17 +6,8 @@ from pathlib import Path
 from csorchestrator.application.cli.cli import orchestrator_main_with_default_run
 from csorchestrator.application.factory.factory import (
     OptionalOrchestratorWithReport,
-    create_orchestrator_factory_all_supported_cases,
 )
-from csorchestrator.domain.orchestrator.workflow_config import (
-    Cron,
-    DayOfWeek,
-    WorkflowConfig,
-    WorkflowTrigger,
-)
-from csorchestrator.foundation.core.optional_result_with_report import (
-    OptionalResultWithReport,
-)
+from csorchestrator.application.recipes.create_orchestrator import create_default_orchestrator
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.foundation.git.resolve_url import (
     RepoUrlParts,
@@ -26,9 +17,6 @@ from csorchestrator.frontend.cscmake_presets.supported_variants import (
 )
 from csorchestrator.frontend.local_execution.step_utils import (
     StepExecuteOnlyOncePerMatrix,
-)
-from csorchestrator.frontend.step.release_creation import (
-    ReleaseCreationOnTagConfig,
 )
 from csorchestrator.frontend.step.step_cmake_command import StepCMakeWorkflow
 from csorchestrator.frontend.step.step_create_archives import StepCreateArchives
@@ -53,7 +41,6 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     base_target_dir = Path("workspace")
     base_install_dir = base_target_dir / Path("install")
     common_repo_ref = "dev"
-    _ = common_repo_ref
 
     repos: dict[str, None | BuildConfig] = {
         "csCMake": None,
@@ -71,23 +58,10 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         "tl-expected": BuildConfig.RELEASE,
     }
 
-    o = create_orchestrator_factory_all_supported_cases(
+    o = create_default_orchestrator(
         name="3rdPartyBaseLibs",
         version="0.1.0",
-        execution_matrix_name="orchestrator-matrix",
-    )
-
-    o.wf_config = WorkflowConfig(
-        trigger=WorkflowTrigger(
-            on_push_branches=["main", "dev"],
-            on_push_tags=["v*.*.*"],
-            on_pull_request_branches=["main"],
-            on_dispatch=True,
-            on_schedule=Cron.weekly(DayOfWeek.MON, hour=3),
-        ),
-        create_release_on_tag=ReleaseCreationOnTagConfig(
-            name="release-from-artifacts", base_install_dir=base_install_dir, artifacts_dir="artifacts"
-        ),
+        base_install_dir=base_install_dir,
     )
 
     # ----------------------------------------------------------------
@@ -167,7 +141,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         )
     )
 
-    return OptionalResultWithReport.createResultAndReport(o, report)
+    return OptionalOrchestratorWithReport.createResultAndReport(o, report)
 
 
 def main(argv: Sequence[str] | None = None) -> int:
