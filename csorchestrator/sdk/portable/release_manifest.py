@@ -132,8 +132,27 @@ def load_release_manifest_single_variant(
     return packages.variants[0].entries
 
 
+def create_archive_filename(
+    project_name_and_version: str,
+    context_os_architecture_compiler_generator_string: str,
+    lib_name: str,
+    lib_version: str,
+) -> str:
+    return (
+        project_name_and_version
+        + "-"
+        + lib_name
+        + "-"
+        + lib_version
+        + "-"
+        + context_os_architecture_compiler_generator_string
+        + ".tar.gz"
+    )
+
+
 def load_release_manifest_single_variant_and_prepare_archive(
     input_full_path: Path,
+    project_name_and_version: str,
     context_os_architecture_compiler_generator_string: str,
     input_base_dir: Path,
 ) -> list[str]:  # return errors
@@ -153,12 +172,9 @@ def load_release_manifest_single_variant_and_prepare_archive(
         output_path = Path(
             input_base_dir
             / Path(
-                str(context_os_architecture_compiler_generator_string)
-                + "-"
-                + item.name
-                + "-"
-                + item.version
-                + ".tar.gz"
+                create_archive_filename(
+                    project_name_and_version, context_os_architecture_compiler_generator_string, item.name, item.version
+                )
             )
         ).resolve()
 
