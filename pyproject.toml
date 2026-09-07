@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "3rdPartyBaseLibs"
 version = "0.1.0"
-description = "orchestrator for projects config, build, deployment"
+description = "collection of 3rdPartyBaseLibs"
 authors = [
   { name = "cscosine-dev", email = "cscosine@gmail.com" }
 ]
