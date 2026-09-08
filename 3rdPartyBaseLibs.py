@@ -42,6 +42,9 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         name="3rdPartyBaseLibs",
         version="0.1.0",
         base_install_dir=base_install_dir,
+        additional_files_list=[
+            Path("3rdPartyBaseLibs") / Path("csOrchestratorConfig.py"),
+        ],
     )
 
     checkout_build_and_archive_repos(
