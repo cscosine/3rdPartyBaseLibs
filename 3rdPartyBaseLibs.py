@@ -7,7 +7,7 @@ from csorchestrator.application.cli.cli import orchestrator_main_with_default_ru
 from csorchestrator.application.factory.factory import (
     OptionalOrchestratorWithReport,
 )
-from csorchestrator.application.recipes.checkout_build import checkout_and_build_repos
+from csorchestrator.application.recipes.checkout_build import checkout_build_and_archive_repos
 from csorchestrator.application.recipes.create_orchestrator import create_default_orchestrator
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.cscmake_presets.supported_variants import (
@@ -44,7 +44,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         base_install_dir=base_install_dir,
     )
 
-    checkout_and_build_repos(
+    checkout_build_and_archive_repos(
         o,
         base_target_dir=base_target_dir,
         base_install_dir=base_install_dir,
