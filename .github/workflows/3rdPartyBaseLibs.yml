@@ -43,7 +43,7 @@ jobs:
         project_name = '3rdPartyBaseLibs'
         project_version = "__PROJECT_VERSION__"
         base_path_additional_files = Path(os.environ["GITHUB_WORKSPACE"])
-        list_additional_files = [Path('3rdPartyBaseLibs/csOrchestratorConfig.py')]
+        list_additional_files = [Path('3rdPartyBaseLibs/cs_orchestrator_config.py')]
         output_folder_additional_files = Path('.')
         output_bundle_file_name = Path('3rdPartyBaseLibs-0.1.0-bundle.tar.gz')
 
