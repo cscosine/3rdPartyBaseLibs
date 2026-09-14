@@ -3,9 +3,9 @@ requires = ["setuptools>=61", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "3rdPartyBaseLibs"
+name = "third_party_base_libs"
 version = "0.1.0"
-description = "Qt 6 build system for csOrchestrator"
+description = "third_party_base_libs build using csorchestrator"
 authors = [
   { name = "cscosine-dev", email = "cscosine@gmail.com" }
 ]
@@ -13,7 +13,7 @@ readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.11"
 dependencies = [
-    # add csOrchestrator when available on pip
+    # add csorchestrator when available on pip
 ]
 
 [tool.setuptools.packages.find]
@@ -50,13 +50,19 @@ target-version = "py311"
 # B  -> Bugbear (common bug patterns)
 # UP -> modern Python suggestions
 # SIM -> catches simplifications
+# N  -> PEP8 naming conventions
+# C4 -> flake8-comprehensions (more Pythonic comprehensions)
+# W  -> Pycodestyle warnings
 select = [
     "E",
     "F",
     "I",
     "B",
     "UP",
-    "SIM"
+    "SIM",
+    "N",
+    "C4",
+    "W",
 ]
 
 [tool.ruff.format]

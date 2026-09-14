@@ -14,6 +14,11 @@ from csorchestrator.frontend.cscmake_presets.supported_variants import (
     BuildConfig,
 )
 
+from third_party_base_libs.csorchestrator_config import (
+    THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
+    THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
+)
+
 
 def create_orchestrator() -> OptionalOrchestratorWithReport:
     report = Report()
@@ -39,11 +44,11 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
     }
 
     o = create_default_orchestrator(
-        name="3rdPartyBaseLibs",
-        version="0.1.0",
+        name=THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
+        version=THIRD_PARTY_BASE_LIBS_PROJECT_VERSION,
         base_install_dir=base_install_dir,
         additional_files_list=[
-            Path("3rdPartyBaseLibs") / Path("cs_orchestrator_config.py"),
+            Path("third_party_base_libs") / Path("csorchestrator_config.py"),
         ],
     )
 
@@ -55,7 +60,7 @@ def create_orchestrator() -> OptionalOrchestratorWithReport:
         repo_access_token="${{ secrets.ACTIONS_ORG_ACCESS }}",
     )
 
-    return OptionalOrchestratorWithReport.createResultAndReport(o, report)
+    return OptionalOrchestratorWithReport.create_result_and_report(o, report)
 
 
 def main(argv: Sequence[str] | None = None) -> int:

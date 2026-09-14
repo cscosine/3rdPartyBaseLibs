@@ -1,4 +1,4 @@
-"""Placeholder tests for the ``3rdPartyBaseLibs`` package.
+"""Placeholder tests for the ``third_party_base_libs`` package.
 
 Real recipe tests (repository list, version alignment, build-matrix
 invariants, ...) will be added later.

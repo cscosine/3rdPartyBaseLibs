@@ -1,4 +1,4 @@
-name: 3rdPartyBaseLibs
+name: third_party_base_libs
 'on':
   push:
     branches:
@@ -21,6 +21,8 @@ jobs:
     steps:
     - name: Repo Self Checkout
       uses: actions/checkout@v6
+    - name: Clean Artifacts Folder
+      run: rm -rf artifacts
     - name: Download all artifacts
       uses: actions/download-artifact@v8
       with:
@@ -38,14 +40,14 @@ jobs:
             collect_release_manifest_single_variant_and_prepare_manifest,
         )
 
-        input_manifest_path_variant = [(Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja/3rdPartyBaseLibs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2022'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2026'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2022'), (Path('3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026/3rdPartyBaseLibs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2026')]
-        output_filepath = Path('3rdPartyBaseLibs-0.1.0.csOrchestratorManifest')
-        project_name = '3rdPartyBaseLibs'
+        input_manifest_path_variant = [(Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig/third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig/third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-x64-generic-clang-default-ninjamulticonfig'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja/third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-gcc-default-ninja'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja/third_party_base_libs-0.1.0-csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu22.04-arm64-generic-clang-default-ninja'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig/third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-gcc-default-ninjamulticonfig'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig/third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-x64-generic-clang-default-ninjamulticonfig'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja/third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-gcc-default-ninja'), (Path('third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja/third_party_base_libs-0.1.0-csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja.csOrchestratorManifest'), 'csv1-linux-ubuntu24.04-arm64-generic-clang-default-ninja'), (Path('third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022/third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2022'), (Path('third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026/third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvc-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvc-default-msvc2026'), (Path('third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022/third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2022.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2022'), (Path('third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026/third_party_base_libs-0.1.0-csv1-windows-v10-x64-generic-msvcclang-default-msvc2026.csOrchestratorManifest'), 'csv1-windows-v10-x64-generic-msvcclang-default-msvc2026')]
+        output_filepath = Path('third_party_base_libs-0.1.0.csOrchestratorManifest')
+        project_name = 'third_party_base_libs'
         project_version = '0.1.0'
         base_path_additional_files = Path(os.environ["GITHUB_WORKSPACE"])
-        list_additional_files = [Path('3rdPartyBaseLibs/cs_orchestrator_config.py')]
+        list_additional_files = [Path('third_party_base_libs/csorchestrator_config.py')]
         output_folder_additional_files = Path('.')
-        output_bundle_file_name = Path('3rdPartyBaseLibs-0.1.0-bundle.tar.gz')
+        output_bundle_file_name = Path('third_party_base_libs-0.1.0-bundle.tar.gz')
 
         errors_list = collect_release_manifest_single_variant_and_prepare_manifest(
             input_manifest_path_variant=input_manifest_path_variant,
@@ -72,19 +74,19 @@ jobs:
         name: manifest.csOrchestratorManifest
         path: |-
           artifacts/**/*.csOrchestratorManifest
-    - name: Upload additional file 3rdPartyBaseLibs-0.1.0-bundle.tar.gz as artifact
+    - name: Upload additional file third_party_base_libs-0.1.0-bundle.tar.gz as artifact
       uses: actions/upload-artifact@v7
       with:
-        name: 3rdPartyBaseLibs-0.1.0-bundle.tar.gz
+        name: third_party_base_libs-0.1.0-bundle.tar.gz
         path: |-
-          artifacts/3rdPartyBaseLibs-0.1.0-bundle.tar.gz
+          artifacts/third_party_base_libs-0.1.0-bundle.tar.gz
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v3
       with:
         files: |-
           artifacts/**/*.tar.gz
           artifacts/**/*.csOrchestratorManifest
-          artifacts/3rdPartyBaseLibs-0.1.0-bundle.tar.gz
+          artifacts/third_party_base_libs-0.1.0-bundle.tar.gz
       if: ${{ github.ref_type == 'tag' }}
   orchestrator-matrix:
     runs-on: ${{ matrix.runner }}
@@ -525,9 +527,9 @@ jobs:
         base_install_dir = Path('workspace/install')
         install_subdir = Path('csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}')
         variant_string = 'csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'
-        project_name = '3rdPartyBaseLibs'
+        project_name = 'third_party_base_libs'
         project_version = '0.1.0'
-        output_file = Path('workspace/install/3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
+        output_file = Path('workspace/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
 
         errors_list = get_package_versions_and_write_single_variant_manifest(
             repos_config_file_list=repos_config_file_list,
@@ -558,8 +560,8 @@ jobs:
             load_release_manifest_single_variant_and_prepare_archive,
         )
 
-        input_full_path = Path('workspace/install/3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
-        project_name_and_version = '3rdPartyBaseLibs-0.1.0'
+        input_full_path = Path('workspace/install/third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}.csOrchestratorManifest')
+        project_name_and_version = 'third_party_base_libs-0.1.0'
         context_os_architecture_compiler_generator_string = 'csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}'
         input_base_dir = Path('workspace/install')
 
@@ -580,7 +582,7 @@ jobs:
     - name: Upload Artifacts
       uses: actions/upload-artifact@v7
       with:
-        name: 3rdPartyBaseLibs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}
+        name: third_party_base_libs-0.1.0-csv1-${{ matrix.os }}-${{ matrix.os_version }}-${{ matrix.architecture }}-${{ matrix.architecture_variant }}-${{ matrix.compiler }}-${{ matrix.compiler_version }}-${{ matrix.generator }}
         path: |-
           workspace/install/*.tar.gz
           workspace/install/*.csOrchestratorManifest
