@@ -14,6 +14,7 @@ from csorchestrator.application.recipes.manifest_github import (
 from csorchestrator.domain.orchestrator.orchestrator import Orchestrator
 from csorchestrator.foundation.core.report import Report
 from csorchestrator.frontend.step.step_get_precompiled_lib_github import (
+    MappingFunction,
     StepGetPrecompiledLibGithub,
 )
 
@@ -47,6 +48,7 @@ def auto_install_csorchestrator_managed_libraries(
     org: str = "cscosine",
     git_repo: str = THIRD_PARTY_BASE_LIBS_PROJECT_NAME,
     base_url: str = StepGetPrecompiledLibGithub.GITHUB_BASE_URL_HTTPS,
+    mapping_function: MappingFunction | None = None,
 ) -> Report:
     """Download the manifest, the bundle, and the requested managed libraries.
 
@@ -61,6 +63,13 @@ def auto_install_csorchestrator_managed_libraries(
       (via the ``library_dependencies`` parameter, sourced from
       ``LIBRARY_DEPENDENCIES``): requesting ``["fmt-eigen"]`` also pulls in
       ``eigen3`` and ``fmt``.
+    * Accepts an optional ``mapping_function`` (default ``None``) that is
+      propagated verbatim to ``download_csorchestrator_managed_libraries``
+      (and from there to each ``StepGetPrecompiledLibGithub``).  Use it when
+      the consumer toolchain matrix does not exactly match the variant
+      strings the bundle was published with (e.g. map a local-only compiler
+      / generator to the closest published precompiled variant, or return
+      ``None`` to skip an unsupported matrix entry).
     * Returns a combined ``Report`` that the caller can append to their own
       report object.
     """
@@ -81,4 +90,5 @@ def auto_install_csorchestrator_managed_libraries(
         base_libs_dir=base_libs_dir,
         lib_name_list=required_libs or None,
         library_dependencies=LIBRARY_DEPENDENCIES,
+        mapping_function=mapping_function,
     )
